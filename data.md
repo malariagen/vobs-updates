@@ -2,12 +2,15 @@
 layout: default
 ---
 
-<p>[all](../) | data</p>
+<small>
+  <a href="../">all</a> | 
+  data
+</small>
 
 <ul>
   {% for post in site.tags.data %}
     <li>
-      <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a> <small>{{ post.date | date: "%-d %B %Y" }} | <em>{{ post.tags | join: "</em> - <em>" }}</em></small>
+      <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a> <small>{{ post.date | date: "%-d %B %Y" }} | {{ post.tags | join: " - " }}</small>
     </li>
   {% endfor %}
 </ul>

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "malariagen_data 12.0.0"
+title:  "malariagen_data version 12.0.0"
 tags: API
 ---
 

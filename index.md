@@ -4,7 +4,8 @@ layout: default
 
 <small>
   all | 
-  <a href="data">data</a>
+  <a href="data">data</a> |
+  <a href="api">API</a>
 </small>
 
 <ul>

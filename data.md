@@ -2,6 +2,8 @@
 layout: default
 ---
 
+<p>[all](../) | data</p>
+
 <ul>
   {% for post in site.tags.data %}
     <li>

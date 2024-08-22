@@ -2,7 +2,7 @@
 layout: default
 ---
 
-all | [data](data)
+<p>all | [data](data)</p>
 
 <ul>
   {% for post in site.posts %}

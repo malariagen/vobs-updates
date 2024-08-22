@@ -4,7 +4,7 @@ layout: default
 
 <small>
   all | 
-  <a href="data">data
+  <a href="data">data</a>
 </small>
 
 <ul>

@@ -1,0 +1,12 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+header h1 {
+  margin: 0 !important;
+}
+
+header h1::before {
+  content: "" !important;
+}

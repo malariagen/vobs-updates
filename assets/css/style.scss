@@ -4,9 +4,13 @@
 @import "{{ site.theme }}";
 
 header h1 {
-  margin: 0 !important;
+    margin: 0 !important;
 }
 
 header h1::before {
-  content: "" !important;
+    content: "" !important;
+}
+
+li {
+    margin: 0 0 5px 0;
 }

@@ -1,2 +1,2 @@
 # vobs-updates
-Minisite with technical updates from the Malaria Vector Genome Observatory.
+Minisite with technical and scientific updates from the Malaria Vector Genome Observatory.

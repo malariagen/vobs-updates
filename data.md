@@ -4,7 +4,8 @@ layout: default
 
 <small>
   <a href="./">all</a> | 
-  data
+  data |
+  <a href="api">API</a>
 </small>
 
 <ul>

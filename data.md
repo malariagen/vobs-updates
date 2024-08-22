@@ -3,7 +3,7 @@ layout: default
 ---
 
 <small>
-  <a href="../">all</a> | 
+  <a href="./">all</a> | 
   data
 </small>
 

@@ -5,7 +5,9 @@ layout: default
 <small>
   all | 
   <a href="data">data</a> |
-  <a href="api">API</a>
+  <a href="api">API</a> |
+  <a href="research">research</a> |
+  <a href="blog">blog</a>
 </small>
 
 <ul>

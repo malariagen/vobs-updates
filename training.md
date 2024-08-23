@@ -8,7 +8,7 @@ layout: default
   <a href="api">API</a> | 
   training |
   <a href="research">research</a> |
-  <a href="social">social</a>
+  <a href="community">community</a>
 </small>
 
 <ul>

@@ -3,6 +3,11 @@
 
 @import "{{ site.theme }}";
 
+header {
+    margin: 0 0 20px 0;
+    padding: 20px 0 0 0;
+}
+
 header h1 {
     margin: 0 !important;
 }
@@ -13,4 +18,5 @@ header h1::before {
 
 li {
     margin: 0 0 5px 0;
+    padding: 0 0 0 5px;
 }

@@ -8,11 +8,11 @@ layout: default
   <a href="api">API</a> | 
   <a href="training">training</a> |
   <a href="research">research</a> |
-  social
+  community
 </small>
 
 <ul>
-  {% for post in site.tags.social %}
+  {% for post in site.tags.community %}
     <li>
       <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a> <small>{{ post.date | date: "%-d %B %Y" }} | {{ post.tags | join: " - " }}</small>
     </li>

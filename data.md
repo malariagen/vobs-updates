@@ -6,6 +6,7 @@ layout: default
   <a href="./">all</a> | 
   data |
   <a href="api">API</a> |
+  <a href="training">training</a> |
   <a href="research">research</a> |
   <a href="blog">blog</a>
 </small>

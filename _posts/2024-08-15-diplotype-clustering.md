@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Using diplotype clustering to discover mutations causing insecticide resistance in malaria mosquitoes"
-tags: blog
+tags: social
 ---
 
 Sanjay Nagi posted [Using diplotype clustering to discover mutations

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "How genomics revealed Anopheles coluzzii’s presence in Kenya "
+title:  "How genomics revealed Anopheles coluzzii’s presence in Kenya"
 tags: community
 ---
 

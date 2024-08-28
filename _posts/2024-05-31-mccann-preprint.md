@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Variation in spatial population structure in the Anopheles gambiae species complex (McCann et al. 2024, preprint)"
+title:  "Preprint - Variation in spatial population structure in the Anopheles gambiae species complex (McCann et al. 2024)"
 tags: research
 ---
 

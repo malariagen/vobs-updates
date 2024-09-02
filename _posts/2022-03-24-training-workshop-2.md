@@ -14,10 +14,7 @@ mutations in genes that cause metabolic resistance to
 insecticides. The workshop comprises four modules:
 
 * Module 1 - Introduction to pandas DataFrames
-
 * Module 2 - The genetic basis of metabolic resistance to insecticides in Anopheles mosquitoes
-
 * Module 3 - Detecting CNVs from genome sequence data
-
 * Module 4 - Analysing CNV frequencies at metabolic resistance genes
 

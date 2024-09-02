@@ -14,10 +14,7 @@ mutations in the gene targeted by pyrethroid insecticides. The
 workshop comprises four modules:
 
 * Module 1 - Interactive cloud computing with Google Colaboratory
-
 * Module 2 - Accessing and exploring Anopheles genomic data
-
 * Module 3 - Navigating the Anopheles gambiae reference genome
-
 * Module 4 - Analysing SNPs in the Vgsc gene
 

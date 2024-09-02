@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "malariagen_data version 7.1.2"
-tags: API
+title:  "Python API version 7.1.2"
+tags: tools
 ---
 
 Version <strong>7.1.2</strong> of the `malariagen_data` Python API was

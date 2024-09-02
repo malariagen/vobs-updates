@@ -5,7 +5,7 @@ layout: default
 <small>
   all | 
   <a href="data">data</a> |
-  <a href="api">API</a> |
+  <a href="tools">tools</a> |
   <a href="training">training</a> |
   <a href="research">research</a> |
   <a href="community">community</a>

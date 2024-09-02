@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "malariagen_data version X.Y.Z"
+title:  "Python API version X.Y.Z"
 tags: API
 ---
 

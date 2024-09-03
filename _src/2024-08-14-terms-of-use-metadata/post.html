@@ -1,0 +1,1467 @@
+---
+layout: post
+title: "Terms of use metadata"
+---
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=ab0bb2d5-ea12-432c-a89a-3a5b0d8d7d92"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Some new metadata columns have been added to help identify which sample sets have usage restrictions (e.g., publication embargo) and which are available for unrestricted use. The metadata columns are:</p>
+<ul>
+<li><code>terms_of_use_expiry_date</code> - Gives the date on which any terms of use will expire. After this date, there will be no usage restrictions on data relating to the sample set.</li>
+<li><code>terms_of_use_url</code> - Gives the address of a web page that describes any usage restrictions which apply to the sample set.</li>
+</ul>
+<p>If the value of either of these fields is empty then there are no terms of use applying to the sample set.</p>
+<p>These new metadata columns can be accessed via the <code>malariagen_data</code> Python API. The API also addes an additional computed field:</p>
+<ul>
+<li><code>unrestricted_use</code> - This is a computed column which is added for convenience. The value is <code>True</code> if the terms of use have expired, or if there were never any usage restrictions applied.</li>
+</ul>
+<p>The metadata columns are available in the dataframes returned by the <code>sample_sets()</code> and <code>sample_metadata()</code> functions. Below are some examples for data from the <em>Anopheles gambiae</em> complex accessed via the <code>Ag3</code> API. Similar code can be used for <em>Anopheles funestus</em> samples via the <code>Af1</code> API.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=8b118e54-0154-45ef-9b4d-3415a9ea72df">
+<div class="input">
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">malariagen_data</span>
+<span class="n">ag3</span> <span class="o">=</span> <span class="n">malariagen_data</span><span class="o">.</span><span class="n">Ag3</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_javascript" id="e406ba6a-d305-4f0a-a2d5-7016d4586964">
+<script type="text/javascript">
+var element = $('#e406ba6a-d305-4f0a-a2d5-7016d4586964');
+'use strict';
+(function(root) {
+  function now() {
+    return new Date();
+  }
+
+  const force = true;
+
+  if (typeof root._bokeh_onload_callbacks === "undefined" || force === true) {
+    root._bokeh_onload_callbacks = [];
+    root._bokeh_is_loading = undefined;
+  }
+
+const JS_MIME_TYPE = 'application/javascript';
+  const HTML_MIME_TYPE = 'text/html';
+  const EXEC_MIME_TYPE = 'application/vnd.bokehjs_exec.v0+json';
+  const CLASS_NAME = 'output_bokeh rendered_html';
+
+  /**
+   * Render data to the DOM node
+   */
+  function render(props, node) {
+    const script = document.createElement("script");
+    node.appendChild(script);
+  }
+
+  /**
+   * Handle when an output is cleared or removed
+   */
+  function handleClearOutput(event, handle) {
+    function drop(id) {
+      const view = Bokeh.index.get_by_id(id)
+      if (view != null) {
+        view.model.document.clear()
+        Bokeh.index.delete(view)
+      }
+    }
+
+    const cell = handle.cell;
+
+    const id = cell.output_area._bokeh_element_id;
+    const server_id = cell.output_area._bokeh_server_id;
+
+    // Clean up Bokeh references
+    if (id != null) {
+      drop(id)
+    }
+
+    if (server_id !== undefined) {
+      // Clean up Bokeh references
+      const cmd_clean = "from bokeh.io.state import curstate; print(curstate().uuid_to_server['" + server_id + "'].get_sessions()[0].document.roots[0]._id)";
+      cell.notebook.kernel.execute(cmd_clean, {
+        iopub: {
+          output: function(msg) {
+            const id = msg.content.text.trim()
+            drop(id)
+          }
+        }
+      });
+      // Destroy server and session
+      const cmd_destroy = "import bokeh.io.notebook as ion; ion.destroy_server('" + server_id + "')";
+      cell.notebook.kernel.execute(cmd_destroy);
+    }
+  }
+
+  /**
+   * Handle when a new output is added
+   */
+  function handleAddOutput(event, handle) {
+    const output_area = handle.output_area;
+    const output = handle.output;
+
+    // limit handleAddOutput to display_data with EXEC_MIME_TYPE content only
+    if ((output.output_type != "display_data") || (!Object.prototype.hasOwnProperty.call(output.data, EXEC_MIME_TYPE))) {
+      return
+    }
+
+    const toinsert = output_area.element.find("." + CLASS_NAME.split(' ')[0]);
+
+    if (output.metadata[EXEC_MIME_TYPE]["id"] !== undefined) {
+      toinsert[toinsert.length - 1].firstChild.textContent = output.data[JS_MIME_TYPE];
+      // store reference to embed id on output_area
+      output_area._bokeh_element_id = output.metadata[EXEC_MIME_TYPE]["id"];
+    }
+    if (output.metadata[EXEC_MIME_TYPE]["server_id"] !== undefined) {
+      const bk_div = document.createElement("div");
+      bk_div.innerHTML = output.data[HTML_MIME_TYPE];
+      const script_attrs = bk_div.children[0].attributes;
+      for (let i = 0; i < script_attrs.length; i++) {
+        toinsert[toinsert.length - 1].firstChild.setAttribute(script_attrs[i].name, script_attrs[i].value);
+        toinsert[toinsert.length - 1].firstChild.textContent = bk_div.children[0].textContent
+      }
+      // store reference to server id on output_area
+      output_area._bokeh_server_id = output.metadata[EXEC_MIME_TYPE]["server_id"];
+    }
+  }
+
+  function register_renderer(events, OutputArea) {
+
+    function append_mime(data, metadata, element) {
+      // create a DOM node to render to
+      const toinsert = this.create_output_subarea(
+        metadata,
+        CLASS_NAME,
+        EXEC_MIME_TYPE
+      );
+      this.keyboard_manager.register_events(toinsert);
+      // Render to node
+      const props = {data: data, metadata: metadata[EXEC_MIME_TYPE]};
+      render(props, toinsert[toinsert.length - 1]);
+      element.append(toinsert);
+      return toinsert
+    }
+
+    /* Handle when an output is cleared or removed */
+    events.on('clear_output.CodeCell', handleClearOutput);
+    events.on('delete.Cell', handleClearOutput);
+
+    /* Handle when a new output is added */
+    events.on('output_added.OutputArea', handleAddOutput);
+
+    /**
+     * Register the mime type and append_mime function with output_area
+     */
+    OutputArea.prototype.register_mime_type(EXEC_MIME_TYPE, append_mime, {
+      /* Is output safe? */
+      safe: true,
+      /* Index of renderer in `output_area.display_order` */
+      index: 0
+    });
+  }
+
+  // register the mime type if in Jupyter Notebook environment and previously unregistered
+  if (root.Jupyter !== undefined) {
+    const events = require('base/js/events');
+    const OutputArea = require('notebook/js/outputarea').OutputArea;
+
+    if (OutputArea.prototype.mime_types().indexOf(EXEC_MIME_TYPE) == -1) {
+      register_renderer(events, OutputArea);
+    }
+  }
+  if (typeof (root._bokeh_timeout) === "undefined" || force === true) {
+    root._bokeh_timeout = Date.now() + 5000;
+    root._bokeh_failed_load = false;
+  }
+
+  const NB_LOAD_WARNING = {'data': {'text/html':
+     "<div style='background-color: #fdd'>\n"+
+     "<p>\n"+
+     "BokehJS does not appear to have successfully loaded. If loading BokehJS from CDN, this \n"+
+     "may be due to a slow or bad network connection. Possible fixes:\n"+
+     "</p>\n"+
+     "<ul>\n"+
+     "<li>re-rerun `output_notebook()` to attempt to load from CDN again, or</li>\n"+
+     "<li>use INLINE resources instead, as so:</li>\n"+
+     "</ul>\n"+
+     "<code>\n"+
+     "from bokeh.resources import INLINE\n"+
+     "output_notebook(resources=INLINE)\n"+
+     "</code>\n"+
+     "</div>"}};
+
+  function display_loaded(error = null) {
+    const el = document.getElementById(null);
+    if (el != null) {
+      const html = (() => {
+        if (typeof root.Bokeh === "undefined") {
+          if (error == null) {
+            return "BokehJS is loading ...";
+          } else {
+            return "BokehJS failed to load.";
+          }
+        } else {
+          const prefix = `BokehJS ${root.Bokeh.version}`;
+          if (error == null) {
+            return `${prefix} successfully loaded.`;
+          } else {
+            return `${prefix} <b>encountered errors</b> while loading and may not function as expected.`;
+          }
+        }
+      })();
+      el.innerHTML = html;
+
+      if (error != null) {
+        const wrapper = document.createElement("div");
+        wrapper.style.overflow = "auto";
+        wrapper.style.height = "5em";
+        wrapper.style.resize = "vertical";
+        const content = document.createElement("div");
+        content.style.fontFamily = "monospace";
+        content.style.whiteSpace = "pre-wrap";
+        content.style.backgroundColor = "rgb(255, 221, 221)";
+        content.textContent = error.stack ?? error.toString();
+        wrapper.append(content);
+        el.append(wrapper);
+      }
+    } else if (Date.now() < root._bokeh_timeout) {
+      setTimeout(() => display_loaded(error), 100);
+    }
+  }
+
+  function run_callbacks() {
+    try {
+      root._bokeh_onload_callbacks.forEach(function(callback) {
+        if (callback != null)
+          callback();
+      });
+    } finally {
+      delete root._bokeh_onload_callbacks
+    }
+    console.debug("Bokeh: all callbacks have finished");
+  }
+
+  function load_libs(css_urls, js_urls, callback) {
+    if (css_urls == null) css_urls = [];
+    if (js_urls == null) js_urls = [];
+
+    root._bokeh_onload_callbacks.push(callback);
+    if (root._bokeh_is_loading > 0) {
+      console.debug("Bokeh: BokehJS is being loaded, scheduling callback at", now());
+      return null;
+    }
+    if (js_urls == null || js_urls.length === 0) {
+      run_callbacks();
+      return null;
+    }
+    console.debug("Bokeh: BokehJS not loaded, scheduling load and callback at", now());
+    root._bokeh_is_loading = css_urls.length + js_urls.length;
+
+    function on_load() {
+      root._bokeh_is_loading--;
+      if (root._bokeh_is_loading === 0) {
+        console.debug("Bokeh: all BokehJS libraries/stylesheets loaded");
+        run_callbacks()
+      }
+    }
+
+    function on_error(url) {
+      console.error("failed to load " + url);
+    }
+
+    for (let i = 0; i < css_urls.length; i++) {
+      const url = css_urls[i];
+      const element = document.createElement("link");
+      element.onload = on_load;
+      element.onerror = on_error.bind(null, url);
+      element.rel = "stylesheet";
+      element.type = "text/css";
+      element.href = url;
+      console.debug("Bokeh: injecting link tag for BokehJS stylesheet: ", url);
+      document.body.appendChild(element);
+    }
+
+    for (let i = 0; i < js_urls.length; i++) {
+      const url = js_urls[i];
+      const element = document.createElement('script');
+      element.onload = on_load;
+      element.onerror = on_error.bind(null, url);
+      element.async = false;
+      element.src = url;
+      console.debug("Bokeh: injecting script tag for BokehJS library: ", url);
+      document.head.appendChild(element);
+    }
+  };
+
+  function inject_raw_css(css) {
+    const element = document.createElement("style");
+    element.appendChild(document.createTextNode(css));
+    document.body.appendChild(element);
+  }
+
+  const js_urls = ["https://cdn.bokeh.org/bokeh/release/bokeh-3.5.2.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-gl-3.5.2.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-widgets-3.5.2.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-tables-3.5.2.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-mathjax-3.5.2.min.js"];
+  const css_urls = [];
+
+  const inline_js = [    function(Bokeh) {
+      Bokeh.set_log_level("info");
+    },
+function(Bokeh) {
+    }
+  ];
+
+  function run_inline_js() {
+    if (root.Bokeh !== undefined || force === true) {
+      try {
+            for (let i = 0; i < inline_js.length; i++) {
+      inline_js[i].call(root, root.Bokeh);
+    }
+
+      } catch (error) {throw error;
+      }} else if (Date.now() < root._bokeh_timeout) {
+      setTimeout(run_inline_js, 100);
+    } else if (!root._bokeh_failed_load) {
+      console.log("Bokeh: BokehJS failed to load within specified timeout.");
+      root._bokeh_failed_load = true;
+    } else if (force !== true) {
+      const cell = $(document.getElementById(null)).parents('.cell').data().cell;
+      cell.output_area.append_execute_result(NB_LOAD_WARNING)
+    }
+  }
+
+  if (root._bokeh_is_loading === 0) {
+    console.debug("Bokeh: BokehJS loaded, going straight to plotting");
+    run_inline_js();
+  } else {
+    load_libs(css_urls, js_urls, function() {
+      console.debug("Bokeh: BokehJS plotting callback run at", now());
+      run_inline_js();
+    });
+  }
+}(window));
+</script>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=36405e28-2fe6-45de-8ff9-7c9da69a69f0"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Sample set metadata:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=aa227ff2-e948-4549-b9eb-cbe44a56a924">
+<div class="input">
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">df_sample_sets</span> <span class="o">=</span> <span class="n">ag3</span><span class="o">.</span><span class="n">sample_sets</span><span class="p">()</span>
+<span class="n">df_sample_sets</span><span class="p">[[</span><span class="s2">"sample_set"</span><span class="p">,</span> <span class="s2">"terms_of_use_expiry_date"</span><span class="p">,</span> <span class="s2">"unrestricted_use"</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_html rendered_html output_subarea output_execute_result"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>sample_set</th>
+<th>terms_of_use_expiry_date</th>
+<th>unrestricted_use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>AG1000G-AO</td>
+<td>2025-01-01</td>
+<td>False</td>
+</tr>
+<tr>
+<th>1</th>
+<td>AG1000G-BF-A</td>
+<td>2025-01-01</td>
+<td>False</td>
+</tr>
+<tr>
+<th>2</th>
+<td>AG1000G-BF-B</td>
+<td>2025-01-01</td>
+<td>False</td>
+</tr>
+<tr>
+<th>3</th>
+<td>AG1000G-BF-C</td>
+<td>2025-01-01</td>
+<td>False</td>
+</tr>
+<tr>
+<th>4</th>
+<td>AG1000G-CD</td>
+<td>2025-01-01</td>
+<td>False</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>78</th>
+<td>1323-VO-GM-NGWA-VMF00235</td>
+<td>2026-04-09</td>
+<td>False</td>
+</tr>
+<tr>
+<th>79</th>
+<td>1323-VO-GM-NGWA-VMF00242</td>
+<td>2026-04-09</td>
+<td>False</td>
+</tr>
+<tr>
+<th>80</th>
+<td>1329-VO-GA-CHRISTOPHE-VMF00228</td>
+<td>2026-04-09</td>
+<td>False</td>
+</tr>
+<tr>
+<th>81</th>
+<td>bergey-2019</td>
+<td>NaN</td>
+<td>True</td>
+</tr>
+<tr>
+<th>82</th>
+<td>campos-2021</td>
+<td>NaN</td>
+<td>True</td>
+</tr>
+</tbody>
+</table>
+<p>83 rows × 3 columns</p>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=ee5c6b0a-434d-418e-8ae0-a3c6e4d08084"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Query to find sample sets with no usage restrictions:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=25e86c70-0efa-4448-98d8-ca67f6b09f20">
+<div class="input">
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">df_sample_sets</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"unrestricted_use"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_html rendered_html output_subarea output_execute_result"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>sample_set</th>
+<th>sample_count</th>
+<th>study_id</th>
+<th>study_url</th>
+<th>terms_of_use_expiry_date</th>
+<th>terms_of_use_url</th>
+<th>release</th>
+<th>unrestricted_use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>32</th>
+<td>fontaine-2015-rebuild</td>
+<td>72</td>
+<td>fontaine-2015-rebuild</td>
+<td>https://doi.org/10.1126/science.1258524</td>
+<td>NaN</td>
+<td>https://www.science.org/doi/10.1126/science.12...</td>
+<td>3.10</td>
+<td>True</td>
+</tr>
+<tr>
+<th>34</th>
+<td>1237-VO-BJ-DJOGBENOU-VMF00050</td>
+<td>90</td>
+<td>1237-VO-BJ-DJOGBENOU</td>
+<td>https://www.malariagen.net/partner_study/1237-...</td>
+<td>2024-07-22</td>
+<td>https://malariagen.github.io/vector-data/ag3/a...</td>
+<td>3.2</td>
+<td>True</td>
+</tr>
+<tr>
+<th>35</th>
+<td>1237-VO-BJ-DJOGBENOU-VMF00067</td>
+<td>142</td>
+<td>1237-VO-BJ-DJOGBENOU</td>
+<td>https://www.malariagen.net/partner_study/1237-...</td>
+<td>2024-07-22</td>
+<td>https://malariagen.github.io/vector-data/ag3/a...</td>
+<td>3.2</td>
+<td>True</td>
+</tr>
+<tr>
+<th>36</th>
+<td>1244-VO-GH-YAWSON-VMF00051</td>
+<td>666</td>
+<td>1244-VO-GH-YAWSON</td>
+<td>https://www.malariagen.net/partner_study/1244-...</td>
+<td>2024-07-22</td>
+<td>https://malariagen.github.io/vector-data/ag3/a...</td>
+<td>3.2</td>
+<td>True</td>
+</tr>
+<tr>
+<th>37</th>
+<td>1245-VO-CI-CONSTANT-VMF00054</td>
+<td>38</td>
+<td>1245-VO-CI-CONSTANT</td>
+<td>https://www.malariagen.net/partner_study/1245-...</td>
+<td>2024-07-22</td>
+<td>https://malariagen.github.io/vector-data/ag3/a...</td>
+<td>3.2</td>
+<td>True</td>
+</tr>
+<tr>
+<th>38</th>
+<td>1253-VO-TG-DJOGBENOU-VMF00052</td>
+<td>179</td>
+<td>1253-VO-TG-DJOGBENOU</td>
+<td>https://www.malariagen.net/partner_study/1253-...</td>
+<td>2024-07-22</td>
+<td>https://malariagen.github.io/vector-data/ag3/a...</td>
+<td>3.2</td>
+<td>True</td>
+</tr>
+<tr>
+<th>39</th>
+<td>1178-VO-UG-LAWNICZAK-VMF00025</td>
+<td>57</td>
+<td>1178-VO-UG-LAWNICZAK</td>
+<td>https://www.malariagen.net/partner_study/1178-...</td>
+<td>2023-10-26</td>
+<td>https://malariagen.github.io/vector-data/ag3/a...</td>
+<td>3.3</td>
+<td>True</td>
+</tr>
+<tr>
+<th>65</th>
+<td>barron-2019</td>
+<td>4</td>
+<td>barron-2019</td>
+<td>https://doi.org/10.1038/s41598-019-49065-5</td>
+<td>NaN</td>
+<td>https://www.nature.com/articles/s41598-019-490...</td>
+<td>3.7</td>
+<td>True</td>
+</tr>
+<tr>
+<th>66</th>
+<td>crawford-2016</td>
+<td>25</td>
+<td>crawford-2016</td>
+<td>https://doi.org/10.1111/mec.13572</td>
+<td>NaN</td>
+<td>https://onlinelibrary.wiley.com/doi/10.1111/me...</td>
+<td>3.7</td>
+<td>True</td>
+</tr>
+<tr>
+<th>72</th>
+<td>tennessen-2021</td>
+<td>208</td>
+<td>tennessen-2021</td>
+<td>https://doi.org/10.1111/mec.15756</td>
+<td>NaN</td>
+<td>https://onlinelibrary.wiley.com/doi/10.1111/me...</td>
+<td>3.8</td>
+<td>True</td>
+</tr>
+<tr>
+<th>81</th>
+<td>bergey-2019</td>
+<td>113</td>
+<td>bergey-2019</td>
+<td>https://doi.org/10.1111/eva.12878</td>
+<td>NaN</td>
+<td>https://onlinelibrary.wiley.com/doi/10.1111/ev...</td>
+<td>3.9</td>
+<td>True</td>
+</tr>
+<tr>
+<th>82</th>
+<td>campos-2021</td>
+<td>163</td>
+<td>campos-2021</td>
+<td>https://doi.org/10.1038/s42003-021-02168-0, ht...</td>
+<td>NaN</td>
+<td>https://www.nature.com/articles/s42003-021-021...</td>
+<td>3.9</td>
+<td>True</td>
+</tr>
+</tbody>
+</table>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=db6dff77-68b7-41ba-8e8e-08150c9d907b"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Sample metadata:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=fe1fff34-757e-4085-a14a-a1643cbe99f8">
+<div class="input">
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">df_samples</span> <span class="o">=</span> <span class="n">ag3</span><span class="o">.</span><span class="n">sample_metadata</span><span class="p">()</span>
+<span class="n">df_samples</span><span class="p">[[</span><span class="s2">"sample_id"</span><span class="p">,</span> <span class="s2">"sample_set"</span><span class="p">,</span> <span class="s2">"terms_of_use_expiry_date"</span><span class="p">,</span> <span class="s2">"terms_of_use_url"</span><span class="p">,</span> <span class="s2">"unrestricted_use"</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_html rendered_html output_subarea output_execute_result"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>sample_id</th>
+<th>sample_set</th>
+<th>terms_of_use_expiry_date</th>
+<th>terms_of_use_url</th>
+<th>unrestricted_use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>VBS00256-4651STDY7017184</td>
+<td>1177-VO-ML-LEHMANN-VMF00004</td>
+<td>2025-11-17</td>
+<td>https://malariagen.github.io/vector-data/ag3/a...</td>
+<td>False</td>
+</tr>
+<tr>
+<th>1</th>
+<td>VBS00257-4651STDY7017185</td>
+<td>1177-VO-ML-LEHMANN-VMF00004</td>
+<td>2025-11-17</td>
+<td>https://malariagen.github.io/vector-data/ag3/a...</td>
+<td>False</td>
+</tr>
+<tr>
+<th>2</th>
+<td>VBS00259-4651STDY7017186</td>
+<td>1177-VO-ML-LEHMANN-VMF00004</td>
+<td>2025-11-17</td>
+<td>https://malariagen.github.io/vector-data/ag3/a...</td>
+<td>False</td>
+</tr>
+<tr>
+<th>3</th>
+<td>VBS00262-4651STDY7017187</td>
+<td>1177-VO-ML-LEHMANN-VMF00004</td>
+<td>2025-11-17</td>
+<td>https://malariagen.github.io/vector-data/ag3/a...</td>
+<td>False</td>
+</tr>
+<tr>
+<th>4</th>
+<td>VBS00277-4651STDY7017189</td>
+<td>1177-VO-ML-LEHMANN-VMF00004</td>
+<td>2025-11-17</td>
+<td>https://malariagen.github.io/vector-data/ag3/a...</td>
+<td>False</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>19766</th>
+<td>SAMN15222632</td>
+<td>tennessen-2021</td>
+<td>NaN</td>
+<td>https://onlinelibrary.wiley.com/doi/10.1111/me...</td>
+<td>True</td>
+</tr>
+<tr>
+<th>19767</th>
+<td>SAMN15222633</td>
+<td>tennessen-2021</td>
+<td>NaN</td>
+<td>https://onlinelibrary.wiley.com/doi/10.1111/me...</td>
+<td>True</td>
+</tr>
+<tr>
+<th>19768</th>
+<td>SAMN15222634</td>
+<td>tennessen-2021</td>
+<td>NaN</td>
+<td>https://onlinelibrary.wiley.com/doi/10.1111/me...</td>
+<td>True</td>
+</tr>
+<tr>
+<th>19769</th>
+<td>SAMN15222635</td>
+<td>tennessen-2021</td>
+<td>NaN</td>
+<td>https://onlinelibrary.wiley.com/doi/10.1111/me...</td>
+<td>True</td>
+</tr>
+<tr>
+<th>19770</th>
+<td>SAMN15222636</td>
+<td>tennessen-2021</td>
+<td>NaN</td>
+<td>https://onlinelibrary.wiley.com/doi/10.1111/me...</td>
+<td>True</td>
+</tr>
+</tbody>
+</table>
+<p>19771 rows × 5 columns</p>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=c4d5bff0-ab4b-476e-ad57-7f11d2f0f086"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Query to find samples with no usage restrictions:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=2e5f4f9d-e351-4d9b-befe-7b34d31c7d5c">
+<div class="input">
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">df_samples</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"unrestricted_use"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_html rendered_html output_subarea output_execute_result"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>sample_id</th>
+<th>partner_sample_id</th>
+<th>contributor</th>
+<th>country</th>
+<th>location</th>
+<th>year</th>
+<th>month</th>
+<th>latitude</th>
+<th>longitude</th>
+<th>sex_call</th>
+<th>...</th>
+<th>admin1_name</th>
+<th>admin1_iso</th>
+<th>admin2_name</th>
+<th>taxon</th>
+<th>cohort_admin1_year</th>
+<th>cohort_admin1_month</th>
+<th>cohort_admin1_quarter</th>
+<th>cohort_admin2_year</th>
+<th>cohort_admin2_month</th>
+<th>cohort_admin2_quarter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>670</th>
+<td>VBS10116-4954STDY7089644</td>
+<td>UG4A2016A1_96</td>
+<td>Mara Lawniczak</td>
+<td>Uganda</td>
+<td>Busia</td>
+<td>2013</td>
+<td>1</td>
+<td>0.466</td>
+<td>34.089</td>
+<td>F</td>
+<td>...</td>
+<td>Eastern Region</td>
+<td>UG-E</td>
+<td>Busia</td>
+<td>gambiae</td>
+<td>UG-E_gamb_2013</td>
+<td>UG-E_gamb_2013_01</td>
+<td>UG-E_gamb_2013_Q1</td>
+<td>UG-E_Busia_gamb_2013</td>
+<td>UG-E_Busia_gamb_2013_01</td>
+<td>UG-E_Busia_gamb_2013_Q1</td>
+</tr>
+<tr>
+<th>671</th>
+<td>VBS10117-4954STDY7089645</td>
+<td>UG4A2016B1_95</td>
+<td>Mara Lawniczak</td>
+<td>Uganda</td>
+<td>Busia</td>
+<td>2016</td>
+<td>6</td>
+<td>0.466</td>
+<td>34.089</td>
+<td>F</td>
+<td>...</td>
+<td>Eastern Region</td>
+<td>UG-E</td>
+<td>Busia</td>
+<td>gambiae</td>
+<td>UG-E_gamb_2016</td>
+<td>UG-E_gamb_2016_06</td>
+<td>UG-E_gamb_2016_Q2</td>
+<td>UG-E_Busia_gamb_2016</td>
+<td>UG-E_Busia_gamb_2016_06</td>
+<td>UG-E_Busia_gamb_2016_Q2</td>
+</tr>
+<tr>
+<th>672</th>
+<td>VBS10118-4954STDY7089646</td>
+<td>UG4A2016C1_94</td>
+<td>Mara Lawniczak</td>
+<td>Uganda</td>
+<td>Busia</td>
+<td>2016</td>
+<td>6</td>
+<td>0.466</td>
+<td>34.089</td>
+<td>F</td>
+<td>...</td>
+<td>Eastern Region</td>
+<td>UG-E</td>
+<td>Busia</td>
+<td>gambiae</td>
+<td>UG-E_gamb_2016</td>
+<td>UG-E_gamb_2016_06</td>
+<td>UG-E_gamb_2016_Q2</td>
+<td>UG-E_Busia_gamb_2016</td>
+<td>UG-E_Busia_gamb_2016_06</td>
+<td>UG-E_Busia_gamb_2016_Q2</td>
+</tr>
+<tr>
+<th>673</th>
+<td>VBS10119-4954STDY7089647</td>
+<td>UG4A2016D1_93</td>
+<td>Mara Lawniczak</td>
+<td>Uganda</td>
+<td>Busia</td>
+<td>2016</td>
+<td>6</td>
+<td>0.466</td>
+<td>34.089</td>
+<td>F</td>
+<td>...</td>
+<td>Eastern Region</td>
+<td>UG-E</td>
+<td>Busia</td>
+<td>gambiae</td>
+<td>UG-E_gamb_2016</td>
+<td>UG-E_gamb_2016_06</td>
+<td>UG-E_gamb_2016_Q2</td>
+<td>UG-E_Busia_gamb_2016</td>
+<td>UG-E_Busia_gamb_2016_06</td>
+<td>UG-E_Busia_gamb_2016_Q2</td>
+</tr>
+<tr>
+<th>674</th>
+<td>VBS10120-4954STDY7089648</td>
+<td>UG4A2016E1_92</td>
+<td>Mara Lawniczak</td>
+<td>Uganda</td>
+<td>Busia</td>
+<td>2016</td>
+<td>6</td>
+<td>0.466</td>
+<td>34.089</td>
+<td>F</td>
+<td>...</td>
+<td>Eastern Region</td>
+<td>UG-E</td>
+<td>Busia</td>
+<td>gambiae</td>
+<td>UG-E_gamb_2016</td>
+<td>UG-E_gamb_2016_06</td>
+<td>UG-E_gamb_2016_Q2</td>
+<td>UG-E_Busia_gamb_2016</td>
+<td>UG-E_Busia_gamb_2016_06</td>
+<td>UG-E_Busia_gamb_2016_Q2</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>19766</th>
+<td>SAMN15222632</td>
+<td>D342</td>
+<td>Jacob Tennessen</td>
+<td>Burkina Faso</td>
+<td>Tengrela</td>
+<td>2016</td>
+<td>-1</td>
+<td>10.700</td>
+<td>-4.800</td>
+<td>F</td>
+<td>...</td>
+<td>Cascades</td>
+<td>BF-02</td>
+<td>Comoe</td>
+<td>coluzzii</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+</tr>
+<tr>
+<th>19767</th>
+<td>SAMN15222633</td>
+<td>D343</td>
+<td>Jacob Tennessen</td>
+<td>Burkina Faso</td>
+<td>Tengrela</td>
+<td>2016</td>
+<td>-1</td>
+<td>10.700</td>
+<td>-4.800</td>
+<td>F</td>
+<td>...</td>
+<td>Cascades</td>
+<td>BF-02</td>
+<td>Comoe</td>
+<td>coluzzii</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+</tr>
+<tr>
+<th>19768</th>
+<td>SAMN15222634</td>
+<td>D346</td>
+<td>Jacob Tennessen</td>
+<td>Burkina Faso</td>
+<td>Tengrela</td>
+<td>2016</td>
+<td>-1</td>
+<td>10.700</td>
+<td>-4.800</td>
+<td>F</td>
+<td>...</td>
+<td>Cascades</td>
+<td>BF-02</td>
+<td>Comoe</td>
+<td>coluzzii</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+</tr>
+<tr>
+<th>19769</th>
+<td>SAMN15222635</td>
+<td>D347</td>
+<td>Jacob Tennessen</td>
+<td>Burkina Faso</td>
+<td>Tengrela</td>
+<td>2016</td>
+<td>-1</td>
+<td>10.700</td>
+<td>-4.800</td>
+<td>F</td>
+<td>...</td>
+<td>Cascades</td>
+<td>BF-02</td>
+<td>Comoe</td>
+<td>coluzzii</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+</tr>
+<tr>
+<th>19770</th>
+<td>SAMN15222636</td>
+<td>D348</td>
+<td>Jacob Tennessen</td>
+<td>Burkina Faso</td>
+<td>Tengrela</td>
+<td>2016</td>
+<td>-1</td>
+<td>10.700</td>
+<td>-4.800</td>
+<td>F</td>
+<td>...</td>
+<td>Cascades</td>
+<td>BF-02</td>
+<td>Comoe</td>
+<td>coluzzii</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+</tr>
+</tbody>
+</table>
+<p>1757 rows × 57 columns</p>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=e539edcc-38e3-4722-bef5-b281c52bfa6d"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Example query to combine with other filters:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=cf5652a2-1266-47a2-8744-40bbceaaf081">
+<div class="input">
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">df_samples</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"country == 'Burkina Faso' and unrestricted_use"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_html rendered_html output_subarea output_execute_result"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>sample_id</th>
+<th>partner_sample_id</th>
+<th>contributor</th>
+<th>country</th>
+<th>location</th>
+<th>year</th>
+<th>month</th>
+<th>latitude</th>
+<th>longitude</th>
+<th>sex_call</th>
+<th>...</th>
+<th>admin1_name</th>
+<th>admin1_iso</th>
+<th>admin2_name</th>
+<th>taxon</th>
+<th>cohort_admin1_year</th>
+<th>cohort_admin1_month</th>
+<th>cohort_admin1_quarter</th>
+<th>cohort_admin2_year</th>
+<th>cohort_admin2_month</th>
+<th>cohort_admin2_quarter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>19466</th>
+<td>SAMN03299607</td>
+<td>GOUND_0022</td>
+<td>Jacob E Crawford</td>
+<td>Burkina Faso</td>
+<td>Goundry</td>
+<td>2008</td>
+<td>11</td>
+<td>12.518</td>
+<td>-1.341</td>
+<td>UKN</td>
+<td>...</td>
+<td>Plateau Central</td>
+<td>BF-11</td>
+<td>Oubritenga</td>
+<td>arabiensis</td>
+<td>BF-11_arab_2008</td>
+<td>BF-11_arab_2008_11</td>
+<td>BF-11_arab_2008_Q4</td>
+<td>BF-11_Oubritenga_arab_2008</td>
+<td>BF-11_Oubritenga_arab_2008_11</td>
+<td>BF-11_Oubritenga_arab_2008_Q4</td>
+</tr>
+<tr>
+<th>19467</th>
+<td>SAMN03299611</td>
+<td>GOUND_0103</td>
+<td>Jacob E Crawford</td>
+<td>Burkina Faso</td>
+<td>Goundry</td>
+<td>2008</td>
+<td>11</td>
+<td>12.518</td>
+<td>-1.341</td>
+<td>F</td>
+<td>...</td>
+<td>Plateau Central</td>
+<td>BF-11</td>
+<td>Oubritenga</td>
+<td>arabiensis</td>
+<td>BF-11_arab_2008</td>
+<td>BF-11_arab_2008_11</td>
+<td>BF-11_arab_2008_Q4</td>
+<td>BF-11_Oubritenga_arab_2008</td>
+<td>BF-11_Oubritenga_arab_2008_11</td>
+<td>BF-11_Oubritenga_arab_2008_Q4</td>
+</tr>
+<tr>
+<th>19468</th>
+<td>SAMN03299612</td>
+<td>GOUND_0105</td>
+<td>Jacob E Crawford</td>
+<td>Burkina Faso</td>
+<td>Goundry</td>
+<td>2008</td>
+<td>11</td>
+<td>12.518</td>
+<td>-1.341</td>
+<td>UKN</td>
+<td>...</td>
+<td>Plateau Central</td>
+<td>BF-11</td>
+<td>Oubritenga</td>
+<td>arabiensis</td>
+<td>BF-11_arab_2008</td>
+<td>BF-11_arab_2008_11</td>
+<td>BF-11_arab_2008_Q4</td>
+<td>BF-11_Oubritenga_arab_2008</td>
+<td>BF-11_Oubritenga_arab_2008_11</td>
+<td>BF-11_Oubritenga_arab_2008_Q4</td>
+</tr>
+<tr>
+<th>19469</th>
+<td>SAMN03299614</td>
+<td>GOUND_0137</td>
+<td>Jacob E Crawford</td>
+<td>Burkina Faso</td>
+<td>Goundry</td>
+<td>2008</td>
+<td>11</td>
+<td>12.518</td>
+<td>-1.341</td>
+<td>F</td>
+<td>...</td>
+<td>Plateau Central</td>
+<td>BF-11</td>
+<td>Oubritenga</td>
+<td>arabiensis</td>
+<td>BF-11_arab_2008</td>
+<td>BF-11_arab_2008_11</td>
+<td>BF-11_arab_2008_Q4</td>
+<td>BF-11_Oubritenga_arab_2008</td>
+<td>BF-11_Oubritenga_arab_2008_11</td>
+<td>BF-11_Oubritenga_arab_2008_Q4</td>
+</tr>
+<tr>
+<th>19470</th>
+<td>SAMN03299615</td>
+<td>KODOU_0009</td>
+<td>Jacob E Crawford</td>
+<td>Burkina Faso</td>
+<td>Kodougou</td>
+<td>2008</td>
+<td>11</td>
+<td>12.520</td>
+<td>-3.607</td>
+<td>F</td>
+<td>...</td>
+<td>Boucle du Mouhoun</td>
+<td>BF-01</td>
+<td>Kossi</td>
+<td>arabiensis</td>
+<td>BF-01_arab_2008</td>
+<td>BF-01_arab_2008_11</td>
+<td>BF-01_arab_2008_Q4</td>
+<td>BF-01_Kossi_arab_2008</td>
+<td>BF-01_Kossi_arab_2008_11</td>
+<td>BF-01_Kossi_arab_2008_Q4</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>19766</th>
+<td>SAMN15222632</td>
+<td>D342</td>
+<td>Jacob Tennessen</td>
+<td>Burkina Faso</td>
+<td>Tengrela</td>
+<td>2016</td>
+<td>-1</td>
+<td>10.700</td>
+<td>-4.800</td>
+<td>F</td>
+<td>...</td>
+<td>Cascades</td>
+<td>BF-02</td>
+<td>Comoe</td>
+<td>coluzzii</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+</tr>
+<tr>
+<th>19767</th>
+<td>SAMN15222633</td>
+<td>D343</td>
+<td>Jacob Tennessen</td>
+<td>Burkina Faso</td>
+<td>Tengrela</td>
+<td>2016</td>
+<td>-1</td>
+<td>10.700</td>
+<td>-4.800</td>
+<td>F</td>
+<td>...</td>
+<td>Cascades</td>
+<td>BF-02</td>
+<td>Comoe</td>
+<td>coluzzii</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+</tr>
+<tr>
+<th>19768</th>
+<td>SAMN15222634</td>
+<td>D346</td>
+<td>Jacob Tennessen</td>
+<td>Burkina Faso</td>
+<td>Tengrela</td>
+<td>2016</td>
+<td>-1</td>
+<td>10.700</td>
+<td>-4.800</td>
+<td>F</td>
+<td>...</td>
+<td>Cascades</td>
+<td>BF-02</td>
+<td>Comoe</td>
+<td>coluzzii</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+</tr>
+<tr>
+<th>19769</th>
+<td>SAMN15222635</td>
+<td>D347</td>
+<td>Jacob Tennessen</td>
+<td>Burkina Faso</td>
+<td>Tengrela</td>
+<td>2016</td>
+<td>-1</td>
+<td>10.700</td>
+<td>-4.800</td>
+<td>F</td>
+<td>...</td>
+<td>Cascades</td>
+<td>BF-02</td>
+<td>Comoe</td>
+<td>coluzzii</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+</tr>
+<tr>
+<th>19770</th>
+<td>SAMN15222636</td>
+<td>D348</td>
+<td>Jacob Tennessen</td>
+<td>Burkina Faso</td>
+<td>Tengrela</td>
+<td>2016</td>
+<td>-1</td>
+<td>10.700</td>
+<td>-4.800</td>
+<td>F</td>
+<td>...</td>
+<td>Cascades</td>
+<td>BF-02</td>
+<td>Comoe</td>
+<td>coluzzii</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+</tr>
+</tbody>
+</table>
+<p>243 rows × 57 columns</p>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=c2a4234f-f273-427b-a983-f14ee6d0b021"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Note that all sample sets in the vector observatory can be accessed and analysed at any time for public health purposes. If any terms of use apply, they may restrict the public communication of any analysis results (publication embargo) for a period of time.</strong></p>
+<p>If you have any questions about usage restrictions, please get in touch via support@malariagen.net.</p>
+</div>
+</div>
+</div>

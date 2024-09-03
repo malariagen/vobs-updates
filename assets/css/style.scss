@@ -20,3 +20,24 @@ li {
     margin: 0 0 5px 0;
     padding: 0 0 0 5px;
 }
+
+div.output_area pre {
+    border: none;
+    background-color: inherit;
+}
+
+div.text_cell_render code {
+    color: #b5e853;
+}
+
+table {
+    border-spacing: 0px;
+}
+
+table, th, td {
+    border: 1px solid #eaeaea;
+}
+
+.dataframe thead th {
+    text-align: center !important;
+}

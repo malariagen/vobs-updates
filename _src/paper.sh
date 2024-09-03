@@ -12,8 +12,8 @@ title=$7
 
 dest=_posts/${date}-${slug}.md
 cp -v _src/paper.md ${dest}
-sed -i "s/YEAR/${year}/g" ${dest}
-sed -i "s/AUTHORS/${authors}/g" ${dest}
-sed -i "s/URL/${url}/g" ${dest}
-sed -i "s/JOURNAL/${journal}/g" ${dest}
-sed -i "s/TITLE/${title}/g" ${dest}
+sed -i "s|YEAR|${year}|g" ${dest}
+sed -i "s|AUTHORS|${authors}|g" ${dest}
+sed -i "s|URL|${url}|g" ${dest}
+sed -i "s|JOURNAL|${journal}|g" ${dest}
+sed -i "s|TITLE|${title}|g" ${dest}

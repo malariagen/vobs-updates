@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "AnoPrimer: Primer Design in malaria vectors informed by range-wide genomic variation (Nagi et al. 2024)"
+title:  "Nagi et al. 2024 - AnoPrimer: Primer Design in malaria vectors informed by range-wide genomic variation"
 tags: research
 ---
 

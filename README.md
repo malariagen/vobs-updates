@@ -27,4 +27,6 @@ markdown files.
 If however you want to write a post with some code examples and would
 find it easier to write the post as a Jupyter notebook, please follow
 the approach described
-[here](https://alimanfoo.github.io/2024/08/20/jupyter-blogging.html).
+[here](https://alimanfoo.github.io/2024/08/20/jupyter-blogging.html)
+(except notebooks are under a directory called "_src" rather than
+"src").

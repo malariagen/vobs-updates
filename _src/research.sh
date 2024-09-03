@@ -3,15 +3,17 @@
 set -xeou pipefail
 
 date=$1
-year=$2
-authors=$3
-slug=$4
-url=$5
-journal=$6
-title=$7
+date_split=(${date//-/ })
+year=${date_split[0]}
+authors=$2
+slug=$3
+url=$4
+journal=$5
+title=$6
+template=$7
 
-dest=_posts/${date}-${slug}.md
-cp -v _src/paper.md ${dest}
+dest=_posts/${date}-${slug}-${template}.md
+cp -v _src/${template}.md ${dest}
 sed -i "s|YEAR|${year}|g" ${dest}
 sed -i "s|AUTHORS|${authors}|g" ${dest}
 sed -i "s|URL|${url}|g" ${dest}

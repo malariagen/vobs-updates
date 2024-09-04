@@ -14,7 +14,7 @@ layout: default
 <ul>
   {% for post in site.tags.tools %}
     <li>
-      <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a> <small>{{ post.date | date: "%-d %B %Y" }} | {{ post.tags | join: " - " }}</small>
+      <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a> <small>{{ post.date | date: "%-d %B %Y" }} | {{ post.tags | join: ", " }}</small>
     </li>
   {% endfor %}
 </ul>

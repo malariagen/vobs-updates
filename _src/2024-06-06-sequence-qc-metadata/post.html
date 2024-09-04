@@ -1,0 +1,997 @@
+---
+layout: post
+title: "Sequence QC metadata"
+tags: data
+---
+{% raw %}
+<div class="cell border-box-sizing code_cell rendered celltag_remove_input" id="cell-id=9ef807c3-0d4a-4fa4-948f-d886b2d4d2ec">
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_html rendered_html output_subarea"><script crossorigin="anonymous" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" src="https://code.jquery.com/jquery-3.7.1.slim.min.js"></script>
+<script crossorigin="anonymous" integrity="sha512-J5ha2LF4Le+PBQnI5+xAVJDR+sZG9uSgroy4n/A6TLjNkvYQbqZA8WHZdaOvJ0HiKkBC9Frmvs10rFDSHKmveQ==" referrerpolicy="no-referrer" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.7/require.min.js"></script>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=2f5684ce-795b-4ccd-94f6-5cf4e75bebca"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>New columns have been added to the sample metadata for the <code>Ag3</code> and <code>Af1</code> resources containing data about quality control metrics.</p>
+<p>This includes columns containing depth of coverage summary statistics:</p>
+<ul>
+<li><code>mean_cov</code> - Mean depth of coverage over the whole genome.</li>
+<li><code>median_cov</code> - Median depth of coverage over the whole genome.</li>
+<li><code>modal_cov</code> - Modal depth of coverage over the whole genome.</li>
+<li><code>frac_gen_cov</code> - Fraction of the genome covered with at least one read.</li>
+<li><code>divergence</code> - Fraction of aligned bases mismatching the reference genome.</li>
+</ul>
+<p>Also columns <code>mean_cov_{contig}</code>, <code>median_cov_{contig}</code> and <code>modal_cov_{contig}</code> are available for each contig.</p>
+<p>Also included are summary statistics from cross-contamination estimation:</p>
+<ul>
+<li><code>contam_pct</code> - Estimated percentage cross-contamination.</li>
+<li><code>contam_LLR</code> - Log likelihood ratio for contamination estimation.</li>
+</ul>
+<p>These columns are available via the <code>sample_metadata()</code> function. Here's an example showing some of these new columns for samples in the <code>Ag3</code> resource:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=a7453542-db8f-4e24-890b-84f9a60e24ee">
+<div class="input">
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">malariagen_data</span>
+<span class="n">ag3</span> <span class="o">=</span> <span class="n">malariagen_data</span><span class="o">.</span><span class="n">Ag3</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_javascript" id="142fa181-25e0-4b20-b462-ead923a17631">
+<script type="text/javascript">
+var element = $('#142fa181-25e0-4b20-b462-ead923a17631');
+'use strict';
+(function(root) {
+  function now() {
+    return new Date();
+  }
+
+  const force = true;
+
+  if (typeof root._bokeh_onload_callbacks === "undefined" || force === true) {
+    root._bokeh_onload_callbacks = [];
+    root._bokeh_is_loading = undefined;
+  }
+
+const JS_MIME_TYPE = 'application/javascript';
+  const HTML_MIME_TYPE = 'text/html';
+  const EXEC_MIME_TYPE = 'application/vnd.bokehjs_exec.v0+json';
+  const CLASS_NAME = 'output_bokeh rendered_html';
+
+  /**
+   * Render data to the DOM node
+   */
+  function render(props, node) {
+    const script = document.createElement("script");
+    node.appendChild(script);
+  }
+
+  /**
+   * Handle when an output is cleared or removed
+   */
+  function handleClearOutput(event, handle) {
+    function drop(id) {
+      const view = Bokeh.index.get_by_id(id)
+      if (view != null) {
+        view.model.document.clear()
+        Bokeh.index.delete(view)
+      }
+    }
+
+    const cell = handle.cell;
+
+    const id = cell.output_area._bokeh_element_id;
+    const server_id = cell.output_area._bokeh_server_id;
+
+    // Clean up Bokeh references
+    if (id != null) {
+      drop(id)
+    }
+
+    if (server_id !== undefined) {
+      // Clean up Bokeh references
+      const cmd_clean = "from bokeh.io.state import curstate; print(curstate().uuid_to_server['" + server_id + "'].get_sessions()[0].document.roots[0]._id)";
+      cell.notebook.kernel.execute(cmd_clean, {
+        iopub: {
+          output: function(msg) {
+            const id = msg.content.text.trim()
+            drop(id)
+          }
+        }
+      });
+      // Destroy server and session
+      const cmd_destroy = "import bokeh.io.notebook as ion; ion.destroy_server('" + server_id + "')";
+      cell.notebook.kernel.execute(cmd_destroy);
+    }
+  }
+
+  /**
+   * Handle when a new output is added
+   */
+  function handleAddOutput(event, handle) {
+    const output_area = handle.output_area;
+    const output = handle.output;
+
+    // limit handleAddOutput to display_data with EXEC_MIME_TYPE content only
+    if ((output.output_type != "display_data") || (!Object.prototype.hasOwnProperty.call(output.data, EXEC_MIME_TYPE))) {
+      return
+    }
+
+    const toinsert = output_area.element.find("." + CLASS_NAME.split(' ')[0]);
+
+    if (output.metadata[EXEC_MIME_TYPE]["id"] !== undefined) {
+      toinsert[toinsert.length - 1].firstChild.textContent = output.data[JS_MIME_TYPE];
+      // store reference to embed id on output_area
+      output_area._bokeh_element_id = output.metadata[EXEC_MIME_TYPE]["id"];
+    }
+    if (output.metadata[EXEC_MIME_TYPE]["server_id"] !== undefined) {
+      const bk_div = document.createElement("div");
+      bk_div.innerHTML = output.data[HTML_MIME_TYPE];
+      const script_attrs = bk_div.children[0].attributes;
+      for (let i = 0; i < script_attrs.length; i++) {
+        toinsert[toinsert.length - 1].firstChild.setAttribute(script_attrs[i].name, script_attrs[i].value);
+        toinsert[toinsert.length - 1].firstChild.textContent = bk_div.children[0].textContent
+      }
+      // store reference to server id on output_area
+      output_area._bokeh_server_id = output.metadata[EXEC_MIME_TYPE]["server_id"];
+    }
+  }
+
+  function register_renderer(events, OutputArea) {
+
+    function append_mime(data, metadata, element) {
+      // create a DOM node to render to
+      const toinsert = this.create_output_subarea(
+        metadata,
+        CLASS_NAME,
+        EXEC_MIME_TYPE
+      );
+      this.keyboard_manager.register_events(toinsert);
+      // Render to node
+      const props = {data: data, metadata: metadata[EXEC_MIME_TYPE]};
+      render(props, toinsert[toinsert.length - 1]);
+      element.append(toinsert);
+      return toinsert
+    }
+
+    /* Handle when an output is cleared or removed */
+    events.on('clear_output.CodeCell', handleClearOutput);
+    events.on('delete.Cell', handleClearOutput);
+
+    /* Handle when a new output is added */
+    events.on('output_added.OutputArea', handleAddOutput);
+
+    /**
+     * Register the mime type and append_mime function with output_area
+     */
+    OutputArea.prototype.register_mime_type(EXEC_MIME_TYPE, append_mime, {
+      /* Is output safe? */
+      safe: true,
+      /* Index of renderer in `output_area.display_order` */
+      index: 0
+    });
+  }
+
+  // register the mime type if in Jupyter Notebook environment and previously unregistered
+  if (root.Jupyter !== undefined) {
+    const events = require('base/js/events');
+    const OutputArea = require('notebook/js/outputarea').OutputArea;
+
+    if (OutputArea.prototype.mime_types().indexOf(EXEC_MIME_TYPE) == -1) {
+      register_renderer(events, OutputArea);
+    }
+  }
+  if (typeof (root._bokeh_timeout) === "undefined" || force === true) {
+    root._bokeh_timeout = Date.now() + 5000;
+    root._bokeh_failed_load = false;
+  }
+
+  const NB_LOAD_WARNING = {'data': {'text/html':
+     "<div style='background-color: #fdd'>\n"+
+     "<p>\n"+
+     "BokehJS does not appear to have successfully loaded. If loading BokehJS from CDN, this \n"+
+     "may be due to a slow or bad network connection. Possible fixes:\n"+
+     "</p>\n"+
+     "<ul>\n"+
+     "<li>re-rerun `output_notebook()` to attempt to load from CDN again, or</li>\n"+
+     "<li>use INLINE resources instead, as so:</li>\n"+
+     "</ul>\n"+
+     "<code>\n"+
+     "from bokeh.resources import INLINE\n"+
+     "output_notebook(resources=INLINE)\n"+
+     "</code>\n"+
+     "</div>"}};
+
+  function display_loaded(error = null) {
+    const el = document.getElementById(null);
+    if (el != null) {
+      const html = (() => {
+        if (typeof root.Bokeh === "undefined") {
+          if (error == null) {
+            return "BokehJS is loading ...";
+          } else {
+            return "BokehJS failed to load.";
+          }
+        } else {
+          const prefix = `BokehJS ${root.Bokeh.version}`;
+          if (error == null) {
+            return `${prefix} successfully loaded.`;
+          } else {
+            return `${prefix} <b>encountered errors</b> while loading and may not function as expected.`;
+          }
+        }
+      })();
+      el.innerHTML = html;
+
+      if (error != null) {
+        const wrapper = document.createElement("div");
+        wrapper.style.overflow = "auto";
+        wrapper.style.height = "5em";
+        wrapper.style.resize = "vertical";
+        const content = document.createElement("div");
+        content.style.fontFamily = "monospace";
+        content.style.whiteSpace = "pre-wrap";
+        content.style.backgroundColor = "rgb(255, 221, 221)";
+        content.textContent = error.stack ?? error.toString();
+        wrapper.append(content);
+        el.append(wrapper);
+      }
+    } else if (Date.now() < root._bokeh_timeout) {
+      setTimeout(() => display_loaded(error), 100);
+    }
+  }
+
+  function run_callbacks() {
+    try {
+      root._bokeh_onload_callbacks.forEach(function(callback) {
+        if (callback != null)
+          callback();
+      });
+    } finally {
+      delete root._bokeh_onload_callbacks
+    }
+    console.debug("Bokeh: all callbacks have finished");
+  }
+
+  function load_libs(css_urls, js_urls, callback) {
+    if (css_urls == null) css_urls = [];
+    if (js_urls == null) js_urls = [];
+
+    root._bokeh_onload_callbacks.push(callback);
+    if (root._bokeh_is_loading > 0) {
+      console.debug("Bokeh: BokehJS is being loaded, scheduling callback at", now());
+      return null;
+    }
+    if (js_urls == null || js_urls.length === 0) {
+      run_callbacks();
+      return null;
+    }
+    console.debug("Bokeh: BokehJS not loaded, scheduling load and callback at", now());
+    root._bokeh_is_loading = css_urls.length + js_urls.length;
+
+    function on_load() {
+      root._bokeh_is_loading--;
+      if (root._bokeh_is_loading === 0) {
+        console.debug("Bokeh: all BokehJS libraries/stylesheets loaded");
+        run_callbacks()
+      }
+    }
+
+    function on_error(url) {
+      console.error("failed to load " + url);
+    }
+
+    for (let i = 0; i < css_urls.length; i++) {
+      const url = css_urls[i];
+      const element = document.createElement("link");
+      element.onload = on_load;
+      element.onerror = on_error.bind(null, url);
+      element.rel = "stylesheet";
+      element.type = "text/css";
+      element.href = url;
+      console.debug("Bokeh: injecting link tag for BokehJS stylesheet: ", url);
+      document.body.appendChild(element);
+    }
+
+    for (let i = 0; i < js_urls.length; i++) {
+      const url = js_urls[i];
+      const element = document.createElement('script');
+      element.onload = on_load;
+      element.onerror = on_error.bind(null, url);
+      element.async = false;
+      element.src = url;
+      console.debug("Bokeh: injecting script tag for BokehJS library: ", url);
+      document.head.appendChild(element);
+    }
+  };
+
+  function inject_raw_css(css) {
+    const element = document.createElement("style");
+    element.appendChild(document.createTextNode(css));
+    document.body.appendChild(element);
+  }
+
+  const js_urls = ["https://cdn.bokeh.org/bokeh/release/bokeh-3.5.2.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-gl-3.5.2.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-widgets-3.5.2.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-tables-3.5.2.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-mathjax-3.5.2.min.js"];
+  const css_urls = [];
+
+  const inline_js = [    function(Bokeh) {
+      Bokeh.set_log_level("info");
+    },
+function(Bokeh) {
+    }
+  ];
+
+  function run_inline_js() {
+    if (root.Bokeh !== undefined || force === true) {
+      try {
+            for (let i = 0; i < inline_js.length; i++) {
+      inline_js[i].call(root, root.Bokeh);
+    }
+
+      } catch (error) {throw error;
+      }} else if (Date.now() < root._bokeh_timeout) {
+      setTimeout(run_inline_js, 100);
+    } else if (!root._bokeh_failed_load) {
+      console.log("Bokeh: BokehJS failed to load within specified timeout.");
+      root._bokeh_failed_load = true;
+    } else if (force !== true) {
+      const cell = $(document.getElementById(null)).parents('.cell').data().cell;
+      cell.output_area.append_execute_result(NB_LOAD_WARNING)
+    }
+  }
+
+  if (root._bokeh_is_loading === 0) {
+    console.debug("Bokeh: BokehJS loaded, going straight to plotting");
+    run_inline_js();
+  } else {
+    load_libs(css_urls, js_urls, function() {
+      console.debug("Bokeh: BokehJS plotting callback run at", now());
+      run_inline_js();
+    });
+  }
+}(window));
+</script>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=09390f1c-670c-44aa-aa55-457b9035c3f1">
+<div class="input">
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Load sample metadata.</span>
+<span class="n">df_samples</span> <span class="o">=</span> <span class="n">ag3</span><span class="o">.</span><span class="n">sample_metadata</span><span class="p">()</span>
+
+<span class="c1"># Inspect all available columns.</span>
+<span class="n">df_samples</span><span class="o">.</span><span class="n">columns</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_text output_subarea output_execute_result">
+<pre>Index(['sample_id', 'partner_sample_id', 'contributor', 'country', 'location',
+       'year', 'month', 'latitude', 'longitude', 'sex_call', 'sample_set',
+       'release', 'quarter', 'study_id', 'study_url',
+       'terms_of_use_expiry_date', 'terms_of_use_url', 'unrestricted_use',
+       'mean_cov', 'median_cov', 'modal_cov', 'mean_cov_2L', 'median_cov_2L',
+       'mode_cov_2L', 'mean_cov_2R', 'median_cov_2R', 'mode_cov_2R',
+       'mean_cov_3L', 'median_cov_3L', 'mode_cov_3L', 'mean_cov_3R',
+       'median_cov_3R', 'mode_cov_3R', 'mean_cov_X', 'median_cov_X',
+       'mode_cov_X', 'frac_gen_cov', 'divergence', 'contam_pct', 'contam_LLR',
+       'aim_species_fraction_arab', 'aim_species_fraction_colu',
+       'aim_species_fraction_colu_no2l', 'aim_species_gambcolu_arabiensis',
+       'aim_species_gambiae_coluzzii', 'aim_species', 'country_iso',
+       'admin1_name', 'admin1_iso', 'admin2_name', 'taxon',
+       'cohort_admin1_year', 'cohort_admin1_month', 'cohort_admin1_quarter',
+       'cohort_admin2_year', 'cohort_admin2_month', 'cohort_admin2_quarter'],
+      dtype='object')</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=b39c0ef6-2981-4751-bad1-d3931acb5742">
+<div class="input">
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># View sample metadata for some of the new columns.</span>
+<span class="n">df_samples</span><span class="p">[[</span>
+    <span class="s2">"sample_id"</span><span class="p">,</span>
+    <span class="s2">"sample_set"</span><span class="p">,</span>
+    <span class="s2">"mean_cov"</span><span class="p">,</span>
+    <span class="s2">"median_cov"</span><span class="p">,</span>
+    <span class="s2">"modal_cov"</span><span class="p">,</span>
+    <span class="s2">"frac_gen_cov"</span><span class="p">,</span>
+    <span class="s2">"divergence"</span><span class="p">,</span>
+    <span class="s2">"contam_pct"</span><span class="p">,</span>
+<span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_html rendered_html output_subarea output_execute_result"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>sample_id</th>
+<th>sample_set</th>
+<th>mean_cov</th>
+<th>median_cov</th>
+<th>modal_cov</th>
+<th>frac_gen_cov</th>
+<th>divergence</th>
+<th>contam_pct</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>VBS00256-4651STDY7017184</td>
+<td>1177-VO-ML-LEHMANN-VMF00004</td>
+<td>26.86</td>
+<td>26</td>
+<td>24</td>
+<td>0.939</td>
+<td>0.02061</td>
+<td>3.572</td>
+</tr>
+<tr>
+<th>1</th>
+<td>VBS00257-4651STDY7017185</td>
+<td>1177-VO-ML-LEHMANN-VMF00004</td>
+<td>31.59</td>
+<td>31</td>
+<td>30</td>
+<td>0.942</td>
+<td>0.02058</td>
+<td>3.337</td>
+</tr>
+<tr>
+<th>2</th>
+<td>VBS00259-4651STDY7017186</td>
+<td>1177-VO-ML-LEHMANN-VMF00004</td>
+<td>35.31</td>
+<td>35</td>
+<td>36</td>
+<td>0.944</td>
+<td>0.02014</td>
+<td>2.29</td>
+</tr>
+<tr>
+<th>3</th>
+<td>VBS00262-4651STDY7017187</td>
+<td>1177-VO-ML-LEHMANN-VMF00004</td>
+<td>30.08</td>
+<td>29</td>
+<td>30</td>
+<td>0.941</td>
+<td>0.02034</td>
+<td>3.502</td>
+</tr>
+<tr>
+<th>4</th>
+<td>VBS00277-4651STDY7017189</td>
+<td>1177-VO-ML-LEHMANN-VMF00004</td>
+<td>31.09</td>
+<td>30</td>
+<td>30</td>
+<td>0.943</td>
+<td>0.02028</td>
+<td>3.127</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>19766</th>
+<td>SAMN15222632</td>
+<td>tennessen-2021</td>
+<td>28.12</td>
+<td>28</td>
+<td>29</td>
+<td>0.94</td>
+<td>0.02014</td>
+<td>1.177</td>
+</tr>
+<tr>
+<th>19767</th>
+<td>SAMN15222633</td>
+<td>tennessen-2021</td>
+<td>30.31</td>
+<td>31</td>
+<td>33</td>
+<td>0.939</td>
+<td>0.01997</td>
+<td>1.229</td>
+</tr>
+<tr>
+<th>19768</th>
+<td>SAMN15222634</td>
+<td>tennessen-2021</td>
+<td>25.49</td>
+<td>25</td>
+<td>26</td>
+<td>0.939</td>
+<td>0.0201</td>
+<td>1.02</td>
+</tr>
+<tr>
+<th>19769</th>
+<td>SAMN15222635</td>
+<td>tennessen-2021</td>
+<td>20.13</td>
+<td>20</td>
+<td>20</td>
+<td>0.939</td>
+<td>0.02026</td>
+<td>0.939</td>
+</tr>
+<tr>
+<th>19770</th>
+<td>SAMN15222636</td>
+<td>tennessen-2021</td>
+<td>23.81</td>
+<td>23</td>
+<td>24</td>
+<td>0.94</td>
+<td>0.02004</td>
+<td>1.113</td>
+</tr>
+</tbody>
+</table>
+<p>19771 rows × 8 columns</p>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=64d128ae-a31e-4a0a-8bef-e5c94ec475bd"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>As part of data curation, only samples which pass standard thresholds for these QC metrics are included in each released dataset in the vector observatory. However, these metrics may be useful if you want to investigate the values of QC metrics in a particular sample set, or apply stricter thresholds.</p>
+<p>For example, here is a histogram of coverage values for an example sample set:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=22dd95ed-25ec-4dcc-89f3-70535de356e0">
+<div class="input">
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">plotly.express</span> <span class="k">as</span> <span class="nn">px</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">df_samples</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"sample_set == 'AG1000G-AO'"</span><span class="p">)</span>
+<span class="n">px</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">,</span> 
+    <span class="n">x</span><span class="o">=</span><span class="s2">"median_cov"</span><span class="p">,</span>
+    <span class="n">width</span><span class="o">=</span><span class="mi">700</span><span class="p">,</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
+    <span class="n">template</span><span class="o">=</span><span class="s2">"plotly_dark"</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_html rendered_html output_subarea"> <script type="text/javascript">
+        window.PlotlyConfig = {MathJaxConfig: 'local'};
+        if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}
+        if (typeof require !== 'undefined') {
+        require.undef("plotly");
+        requirejs.config({
+            paths: {
+                'plotly': ['https://cdn.plot.ly/plotly-2.35.0.min']
+            }
+        });
+        require(['plotly'], function(Plotly) {
+            window._Plotly = Plotly;
+        });
+        }
+        </script>
+</div>
+</div>
+<div class="output_area">
+<div class="output_html rendered_html output_subarea"><div> <div class="plotly-graph-div" id="31ba7f53-b78b-474e-bb37-8329e13b6702" style="height:400px; width:700px;"></div> <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("31ba7f53-b78b-474e-bb37-8329e13b6702")) {                    Plotly.newPlot(                        "31ba7f53-b78b-474e-bb37-8329e13b6702",                        [{"alignmentgroup":"True","bingroup":"x","hovertemplate":"median_cov=%{x}\u003cbr\u003ecount=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"","marker":{"color":"#636efa","pattern":{"shape":""}},"name":"","offsetgroup":"","orientation":"v","showlegend":false,"x":[26,28,26,23,23,25,15,33,22,24,25,38,33,19,28,29,29,31,28,28,29,30,38,21,24,30,26,31,28,35,45,37,32,33,29,35,32,32,28,26,29,31,25,29,29,32,30,26,29,27,27,32,32,31,32,27,27,33,34,28,22,25,26,26,25,26,30,27,28,22,30,31,31,32,33,32,29,28,26,20,24],"xaxis":"x","yaxis":"y","type":"histogram"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#f2f5fa"},"error_y":{"color":"#f2f5fa"},"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"baxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmapgl"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"line":{"color":"#283442"}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"marker":{"line":{"color":"#283442"}},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#506784"},"line":{"color":"rgb(17,17,17)"}},"header":{"fill":{"color":"#2a3f5f"},"line":{"color":"rgb(17,17,17)"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#f2f5fa","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#f2f5fa"},"geo":{"bgcolor":"rgb(17,17,17)","lakecolor":"rgb(17,17,17)","landcolor":"rgb(17,17,17)","showlakes":true,"showland":true,"subunitcolor":"#506784"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"dark"},"paper_bgcolor":"rgb(17,17,17)","plot_bgcolor":"rgb(17,17,17)","polar":{"angularaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","radialaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"yaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"zaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"}},"shapedefaults":{"line":{"color":"#f2f5fa"}},"sliderdefaults":{"bgcolor":"#C8D4E3","bordercolor":"rgb(17,17,17)","borderwidth":1,"tickwidth":0},"ternary":{"aaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"baxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","caxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"title":{"x":0.05},"updatemenudefaults":{"bgcolor":"#506784","borderwidth":0},"xaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"median_cov"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"count"}},"legend":{"tracegroupgap":0},"margin":{"t":60},"barmode":"relative","height":400,"width":700},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('31ba7f53-b78b-474e-bb37-8329e13b6702');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };                });            </script> </div></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=6379f349-a084-4524-be73-d5bcfe195e3c"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For example, query samples where coverage is greater than 20X:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=727ddafa-d315-4c1d-865f-0f9cfc99a106">
+<div class="input">
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">df_samples</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"median_cov &gt; 20"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_html rendered_html output_subarea output_execute_result"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>sample_id</th>
+<th>partner_sample_id</th>
+<th>contributor</th>
+<th>country</th>
+<th>location</th>
+<th>year</th>
+<th>month</th>
+<th>latitude</th>
+<th>longitude</th>
+<th>sex_call</th>
+<th>...</th>
+<th>admin1_name</th>
+<th>admin1_iso</th>
+<th>admin2_name</th>
+<th>taxon</th>
+<th>cohort_admin1_year</th>
+<th>cohort_admin1_month</th>
+<th>cohort_admin1_quarter</th>
+<th>cohort_admin2_year</th>
+<th>cohort_admin2_month</th>
+<th>cohort_admin2_quarter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>VBS00256-4651STDY7017184</td>
+<td>GP97</td>
+<td>Tovi Lehmann</td>
+<td>Mali</td>
+<td>Dallowere</td>
+<td>2012</td>
+<td>6</td>
+<td>13.616</td>
+<td>-7.037</td>
+<td>F</td>
+<td>...</td>
+<td>Koulikouro</td>
+<td>ML-2</td>
+<td>Banamba</td>
+<td>coluzzii</td>
+<td>ML-2_colu_2012</td>
+<td>ML-2_colu_2012_06</td>
+<td>ML-2_colu_2012_Q2</td>
+<td>ML-2_Banamba_colu_2012</td>
+<td>ML-2_Banamba_colu_2012_06</td>
+<td>ML-2_Banamba_colu_2012_Q2</td>
+</tr>
+<tr>
+<th>1</th>
+<td>VBS00257-4651STDY7017185</td>
+<td>GP98</td>
+<td>Tovi Lehmann</td>
+<td>Mali</td>
+<td>Dallowere</td>
+<td>2012</td>
+<td>6</td>
+<td>13.616</td>
+<td>-7.037</td>
+<td>F</td>
+<td>...</td>
+<td>Koulikouro</td>
+<td>ML-2</td>
+<td>Banamba</td>
+<td>coluzzii</td>
+<td>ML-2_colu_2012</td>
+<td>ML-2_colu_2012_06</td>
+<td>ML-2_colu_2012_Q2</td>
+<td>ML-2_Banamba_colu_2012</td>
+<td>ML-2_Banamba_colu_2012_06</td>
+<td>ML-2_Banamba_colu_2012_Q2</td>
+</tr>
+<tr>
+<th>2</th>
+<td>VBS00259-4651STDY7017186</td>
+<td>GP100</td>
+<td>Tovi Lehmann</td>
+<td>Mali</td>
+<td>Dallowere</td>
+<td>2012</td>
+<td>6</td>
+<td>13.616</td>
+<td>-7.037</td>
+<td>F</td>
+<td>...</td>
+<td>Koulikouro</td>
+<td>ML-2</td>
+<td>Banamba</td>
+<td>coluzzii</td>
+<td>ML-2_colu_2012</td>
+<td>ML-2_colu_2012_06</td>
+<td>ML-2_colu_2012_Q2</td>
+<td>ML-2_Banamba_colu_2012</td>
+<td>ML-2_Banamba_colu_2012_06</td>
+<td>ML-2_Banamba_colu_2012_Q2</td>
+</tr>
+<tr>
+<th>3</th>
+<td>VBS00262-4651STDY7017187</td>
+<td>GP103</td>
+<td>Tovi Lehmann</td>
+<td>Mali</td>
+<td>Dallowere</td>
+<td>2012</td>
+<td>6</td>
+<td>13.616</td>
+<td>-7.037</td>
+<td>F</td>
+<td>...</td>
+<td>Koulikouro</td>
+<td>ML-2</td>
+<td>Banamba</td>
+<td>coluzzii</td>
+<td>ML-2_colu_2012</td>
+<td>ML-2_colu_2012_06</td>
+<td>ML-2_colu_2012_Q2</td>
+<td>ML-2_Banamba_colu_2012</td>
+<td>ML-2_Banamba_colu_2012_06</td>
+<td>ML-2_Banamba_colu_2012_Q2</td>
+</tr>
+<tr>
+<th>4</th>
+<td>VBS00277-4651STDY7017189</td>
+<td>GP118</td>
+<td>Tovi Lehmann</td>
+<td>Mali</td>
+<td>Dallowere</td>
+<td>2012</td>
+<td>6</td>
+<td>13.616</td>
+<td>-7.037</td>
+<td>F</td>
+<td>...</td>
+<td>Koulikouro</td>
+<td>ML-2</td>
+<td>Banamba</td>
+<td>coluzzii</td>
+<td>ML-2_colu_2012</td>
+<td>ML-2_colu_2012_06</td>
+<td>ML-2_colu_2012_Q2</td>
+<td>ML-2_Banamba_colu_2012</td>
+<td>ML-2_Banamba_colu_2012_06</td>
+<td>ML-2_Banamba_colu_2012_Q2</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>19765</th>
+<td>SAMN15222631</td>
+<td>D341</td>
+<td>Jacob Tennessen</td>
+<td>Burkina Faso</td>
+<td>Tengrela</td>
+<td>2016</td>
+<td>-1</td>
+<td>10.700</td>
+<td>-4.800</td>
+<td>F</td>
+<td>...</td>
+<td>Cascades</td>
+<td>BF-02</td>
+<td>Comoe</td>
+<td>coluzzii</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+</tr>
+<tr>
+<th>19766</th>
+<td>SAMN15222632</td>
+<td>D342</td>
+<td>Jacob Tennessen</td>
+<td>Burkina Faso</td>
+<td>Tengrela</td>
+<td>2016</td>
+<td>-1</td>
+<td>10.700</td>
+<td>-4.800</td>
+<td>F</td>
+<td>...</td>
+<td>Cascades</td>
+<td>BF-02</td>
+<td>Comoe</td>
+<td>coluzzii</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+</tr>
+<tr>
+<th>19767</th>
+<td>SAMN15222633</td>
+<td>D343</td>
+<td>Jacob Tennessen</td>
+<td>Burkina Faso</td>
+<td>Tengrela</td>
+<td>2016</td>
+<td>-1</td>
+<td>10.700</td>
+<td>-4.800</td>
+<td>F</td>
+<td>...</td>
+<td>Cascades</td>
+<td>BF-02</td>
+<td>Comoe</td>
+<td>coluzzii</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+</tr>
+<tr>
+<th>19768</th>
+<td>SAMN15222634</td>
+<td>D346</td>
+<td>Jacob Tennessen</td>
+<td>Burkina Faso</td>
+<td>Tengrela</td>
+<td>2016</td>
+<td>-1</td>
+<td>10.700</td>
+<td>-4.800</td>
+<td>F</td>
+<td>...</td>
+<td>Cascades</td>
+<td>BF-02</td>
+<td>Comoe</td>
+<td>coluzzii</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+</tr>
+<tr>
+<th>19770</th>
+<td>SAMN15222636</td>
+<td>D348</td>
+<td>Jacob Tennessen</td>
+<td>Burkina Faso</td>
+<td>Tengrela</td>
+<td>2016</td>
+<td>-1</td>
+<td>10.700</td>
+<td>-4.800</td>
+<td>F</td>
+<td>...</td>
+<td>Cascades</td>
+<td>BF-02</td>
+<td>Comoe</td>
+<td>coluzzii</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+<td>BF-02_Comoe_colu_2016</td>
+</tr>
+</tbody>
+</table>
+<p>18676 rows × 57 columns</p>
+</div></div>
+</div>
+</div>
+</div>
+</div>{% endraw %}
+
+

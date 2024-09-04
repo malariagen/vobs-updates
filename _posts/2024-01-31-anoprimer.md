@@ -4,7 +4,7 @@ title:  "AnoPrimer"
 tags: community tools
 ---
 
-Sanjay Nagi has released version 1.0.0 of
+Sanjay Nagi has released
 [AnoPrimer](https://github.com/sanjaynagi/AnoPrimer), a Python package
 for primer design in *Anopheles gambiae s.l.* and *Anopheles funestus*
 taking into account SNP variation in primer binding sites, using

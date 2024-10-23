@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Python API version 13.2.1"
-tags: API
+tags: tools
 ---
 
 Version <strong>13.2.1</strong> of the `malariagen_data` Python API was

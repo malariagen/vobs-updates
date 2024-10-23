@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Odero et al. 2024 - Discovery of Knock-Down Resistance in the Major African Malaria Vector _Anopheles funestus_"
+title:  "Odero et al. 2024 - Discovery of Knock-Down Resistance in the Major African Malaria Vector Anopheles funestus"
 tags: research
 ---
 

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Hackathon"
+title:  "Hackathon for the 2024 data analysis training course"
 tags: training
 ---
 

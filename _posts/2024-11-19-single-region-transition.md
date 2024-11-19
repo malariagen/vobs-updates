@@ -18,7 +18,7 @@ Due to this, we are starting to roll-out some changes:
 import malariagen_data
 
 malariagen_data.__version__
-)
+
 {% endhighlight %}
 
   - **If you use Google Colab:**

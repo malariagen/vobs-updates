@@ -9,8 +9,8 @@ Currently, data is stored in multi-region Google Cloud Storage (GCS) buckets. Af
 
 Due to this, we are starting to roll-out some changes:
 
-1. If you access data via the malariagen_data API:
-  - Please ensure that you are only using API versions v13.0.0 or newer. If you install m without specifying a version (e.g., using `%pip install malariagen_data`), the latest version will automatically be installed.
+1. *If you access data via the malariagen_data API:*
+  - Please ensure that you are only using API versions v13.0.0 or newer. If you install `malariagen_data` without specifying a version (e.g., using `%pip install malariagen_data`), the latest version will automatically be installed.
 
   - To check the version you’re currently using in a notebook, run:
   
@@ -21,11 +21,11 @@ malariagen_data.__version__
 )
 {% endhighlight %}
 
-  - If you use Google Colab:
+  - *If you use Google Colab:*
       - Confirm you’re running the latest version of the API (v13.0.0 or newer).
       - If you encounter an error due to being allocated a Virtual Machine (VM) outside of the US, go to `"Runtime" > "Disconnect and delete runtime"` to allocate a new VM within the US region.
 
-2. If you access data via data directly from GCS buckets:
+2. *If you access data via data directly from GCS buckets:*
 - The following bucket name changes have been implemented:
     - Ag data previously stored in `gs://vo_agam_release` is now in `gs://vo_agam_release_master_us_central1`
     - Af data previously stored in `gs://vo_afun_release` is now in  `gs://vo_afun_release_master_us_central1`

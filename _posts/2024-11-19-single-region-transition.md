@@ -7,7 +7,7 @@ tags: data
 We are making some changes to how data is stored in the Vector Observatory (VObs).
 Previously, data has been stored in multi-region Google Cloud Storage (GCS) buckets. We have now decided to migrate the data to single-region buckets located in the us-central1 region. This transition reduces our running costs without affecting data availability or performance.
 
-To access data in the new single-region buckets, please follow the instructions below:
+To access data in the new single-region buckets, please follow the instructions below.
 
 ## If you access data via the malariagen_data Python API
 

@@ -28,6 +28,6 @@ malariagen_data.__version__
     - Af data previously stored in `gs://vo_afun_release` is now in  `gs://vo_afun_release_master_us_central1`
 
 - All data has been mirrored to the new buckets. Please update any scripts or code to use the new bucket names.
-**N.B., the multi-region buckets (`vo_agam_release`, `vo_agam_release`) will be deprecated on November 30th, 2024. Please follow the instructions above to migrate to using single-region buckets before this date.**
+**N.B., the multi-region buckets (`vo_agam_release`, `vo_afun_release`) will be deprecated on November 30th, 2024. Please follow the instructions above to migrate to using single-region buckets before this date.**
 
 If you have any questions or concerns, please contact us at `support@malariagen.net`

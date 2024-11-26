@@ -35,6 +35,6 @@ All data has been mirrored to the new buckets. Please update any scripts or code
 
 ## Timeline for deprecation of multi-region buckets
 
-**N.B., the multi-region buckets `vo_agam_release` and `vo_afun_release` will be deprecated on November 30th, 2024. Please follow the instructions above to migrate to using single-region buckets before this date.**
+**N.B., the multi-region buckets `vo_agam_release` and `vo_afun_release` will be deprecated on December 31st, 2024. Please follow the instructions above to migrate to using single-region buckets before this date.**
 
 If you have any questions or concerns, please contact us at `support@malariagen.net`

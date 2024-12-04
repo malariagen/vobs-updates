@@ -1,0 +1,535 @@
+---
+layout: post
+title: Early data release for sample set 1178-VO-UG-LAWNICZAK-VMF00025
+tags: data
+---
+{% raw %} 
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=83eb2462-894f-4e1d-b034-cd2885b1ffc1"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Data relating to sample set 1178-VO-UG-LAWNICZAK-VMF00025 in the Ag3.3 dataset have been released from publication embargo today:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered celltag_remove_input" id="cell-id=28bdb454-356d-4895-8bbc-e8e6f0ccd9f4">
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_javascript" id="5b625303-06e1-471b-a5a5-ed244adb088e">
+<script type="text/javascript">
+var element = $('#5b625303-06e1-471b-a5a5-ed244adb088e');
+'use strict';
+(function(root) {
+  function now() {
+    return new Date();
+  }
+
+  const force = true;
+
+  if (typeof root._bokeh_onload_callbacks === "undefined" || force === true) {
+    root._bokeh_onload_callbacks = [];
+    root._bokeh_is_loading = undefined;
+  }
+
+const JS_MIME_TYPE = 'application/javascript';
+  const HTML_MIME_TYPE = 'text/html';
+  const EXEC_MIME_TYPE = 'application/vnd.bokehjs_exec.v0+json';
+  const CLASS_NAME = 'output_bokeh rendered_html';
+
+  /**
+   * Render data to the DOM node
+   */
+  function render(props, node) {
+    const script = document.createElement("script");
+    node.appendChild(script);
+  }
+
+  /**
+   * Handle when an output is cleared or removed
+   */
+  function handleClearOutput(event, handle) {
+    function drop(id) {
+      const view = Bokeh.index.get_by_id(id)
+      if (view != null) {
+        view.model.document.clear()
+        Bokeh.index.delete(view)
+      }
+    }
+
+    const cell = handle.cell;
+
+    const id = cell.output_area._bokeh_element_id;
+    const server_id = cell.output_area._bokeh_server_id;
+
+    // Clean up Bokeh references
+    if (id != null) {
+      drop(id)
+    }
+
+    if (server_id !== undefined) {
+      // Clean up Bokeh references
+      const cmd_clean = "from bokeh.io.state import curstate; print(curstate().uuid_to_server['" + server_id + "'].get_sessions()[0].document.roots[0]._id)";
+      cell.notebook.kernel.execute(cmd_clean, {
+        iopub: {
+          output: function(msg) {
+            const id = msg.content.text.trim()
+            drop(id)
+          }
+        }
+      });
+      // Destroy server and session
+      const cmd_destroy = "import bokeh.io.notebook as ion; ion.destroy_server('" + server_id + "')";
+      cell.notebook.kernel.execute(cmd_destroy);
+    }
+  }
+
+  /**
+   * Handle when a new output is added
+   */
+  function handleAddOutput(event, handle) {
+    const output_area = handle.output_area;
+    const output = handle.output;
+
+    // limit handleAddOutput to display_data with EXEC_MIME_TYPE content only
+    if ((output.output_type != "display_data") || (!Object.prototype.hasOwnProperty.call(output.data, EXEC_MIME_TYPE))) {
+      return
+    }
+
+    const toinsert = output_area.element.find("." + CLASS_NAME.split(' ')[0]);
+
+    if (output.metadata[EXEC_MIME_TYPE]["id"] !== undefined) {
+      toinsert[toinsert.length - 1].firstChild.textContent = output.data[JS_MIME_TYPE];
+      // store reference to embed id on output_area
+      output_area._bokeh_element_id = output.metadata[EXEC_MIME_TYPE]["id"];
+    }
+    if (output.metadata[EXEC_MIME_TYPE]["server_id"] !== undefined) {
+      const bk_div = document.createElement("div");
+      bk_div.innerHTML = output.data[HTML_MIME_TYPE];
+      const script_attrs = bk_div.children[0].attributes;
+      for (let i = 0; i < script_attrs.length; i++) {
+        toinsert[toinsert.length - 1].firstChild.setAttribute(script_attrs[i].name, script_attrs[i].value);
+        toinsert[toinsert.length - 1].firstChild.textContent = bk_div.children[0].textContent
+      }
+      // store reference to server id on output_area
+      output_area._bokeh_server_id = output.metadata[EXEC_MIME_TYPE]["server_id"];
+    }
+  }
+
+  function register_renderer(events, OutputArea) {
+
+    function append_mime(data, metadata, element) {
+      // create a DOM node to render to
+      const toinsert = this.create_output_subarea(
+        metadata,
+        CLASS_NAME,
+        EXEC_MIME_TYPE
+      );
+      this.keyboard_manager.register_events(toinsert);
+      // Render to node
+      const props = {data: data, metadata: metadata[EXEC_MIME_TYPE]};
+      render(props, toinsert[toinsert.length - 1]);
+      element.append(toinsert);
+      return toinsert
+    }
+
+    /* Handle when an output is cleared or removed */
+    events.on('clear_output.CodeCell', handleClearOutput);
+    events.on('delete.Cell', handleClearOutput);
+
+    /* Handle when a new output is added */
+    events.on('output_added.OutputArea', handleAddOutput);
+
+    /**
+     * Register the mime type and append_mime function with output_area
+     */
+    OutputArea.prototype.register_mime_type(EXEC_MIME_TYPE, append_mime, {
+      /* Is output safe? */
+      safe: true,
+      /* Index of renderer in `output_area.display_order` */
+      index: 0
+    });
+  }
+
+  // register the mime type if in Jupyter Notebook environment and previously unregistered
+  if (root.Jupyter !== undefined) {
+    const events = require('base/js/events');
+    const OutputArea = require('notebook/js/outputarea').OutputArea;
+
+    if (OutputArea.prototype.mime_types().indexOf(EXEC_MIME_TYPE) == -1) {
+      register_renderer(events, OutputArea);
+    }
+  }
+  if (typeof (root._bokeh_timeout) === "undefined" || force === true) {
+    root._bokeh_timeout = Date.now() + 5000;
+    root._bokeh_failed_load = false;
+  }
+
+  const NB_LOAD_WARNING = {'data': {'text/html':
+     "<div style='background-color: #fdd'>\n"+
+     "<p>\n"+
+     "BokehJS does not appear to have successfully loaded. If loading BokehJS from CDN, this \n"+
+     "may be due to a slow or bad network connection. Possible fixes:\n"+
+     "</p>\n"+
+     "<ul>\n"+
+     "<li>re-rerun `output_notebook()` to attempt to load from CDN again, or</li>\n"+
+     "<li>use INLINE resources instead, as so:</li>\n"+
+     "</ul>\n"+
+     "<code>\n"+
+     "from bokeh.resources import INLINE\n"+
+     "output_notebook(resources=INLINE)\n"+
+     "</code>\n"+
+     "</div>"}};
+
+  function display_loaded(error = null) {
+    const el = document.getElementById(null);
+    if (el != null) {
+      const html = (() => {
+        if (typeof root.Bokeh === "undefined") {
+          if (error == null) {
+            return "BokehJS is loading ...";
+          } else {
+            return "BokehJS failed to load.";
+          }
+        } else {
+          const prefix = `BokehJS ${root.Bokeh.version}`;
+          if (error == null) {
+            return `${prefix} successfully loaded.`;
+          } else {
+            return `${prefix} <b>encountered errors</b> while loading and may not function as expected.`;
+          }
+        }
+      })();
+      el.innerHTML = html;
+
+      if (error != null) {
+        const wrapper = document.createElement("div");
+        wrapper.style.overflow = "auto";
+        wrapper.style.height = "5em";
+        wrapper.style.resize = "vertical";
+        const content = document.createElement("div");
+        content.style.fontFamily = "monospace";
+        content.style.whiteSpace = "pre-wrap";
+        content.style.backgroundColor = "rgb(255, 221, 221)";
+        content.textContent = error.stack ?? error.toString();
+        wrapper.append(content);
+        el.append(wrapper);
+      }
+    } else if (Date.now() < root._bokeh_timeout) {
+      setTimeout(() => display_loaded(error), 100);
+    }
+  }
+
+  function run_callbacks() {
+    try {
+      root._bokeh_onload_callbacks.forEach(function(callback) {
+        if (callback != null)
+          callback();
+      });
+    } finally {
+      delete root._bokeh_onload_callbacks
+    }
+    console.debug("Bokeh: all callbacks have finished");
+  }
+
+  function load_libs(css_urls, js_urls, callback) {
+    if (css_urls == null) css_urls = [];
+    if (js_urls == null) js_urls = [];
+
+    root._bokeh_onload_callbacks.push(callback);
+    if (root._bokeh_is_loading > 0) {
+      console.debug("Bokeh: BokehJS is being loaded, scheduling callback at", now());
+      return null;
+    }
+    if (js_urls == null || js_urls.length === 0) {
+      run_callbacks();
+      return null;
+    }
+    console.debug("Bokeh: BokehJS not loaded, scheduling load and callback at", now());
+    root._bokeh_is_loading = css_urls.length + js_urls.length;
+
+    function on_load() {
+      root._bokeh_is_loading--;
+      if (root._bokeh_is_loading === 0) {
+        console.debug("Bokeh: all BokehJS libraries/stylesheets loaded");
+        run_callbacks()
+      }
+    }
+
+    function on_error(url) {
+      console.error("failed to load " + url);
+    }
+
+    for (let i = 0; i < css_urls.length; i++) {
+      const url = css_urls[i];
+      const element = document.createElement("link");
+      element.onload = on_load;
+      element.onerror = on_error.bind(null, url);
+      element.rel = "stylesheet";
+      element.type = "text/css";
+      element.href = url;
+      console.debug("Bokeh: injecting link tag for BokehJS stylesheet: ", url);
+      document.body.appendChild(element);
+    }
+
+    for (let i = 0; i < js_urls.length; i++) {
+      const url = js_urls[i];
+      const element = document.createElement('script');
+      element.onload = on_load;
+      element.onerror = on_error.bind(null, url);
+      element.async = false;
+      element.src = url;
+      console.debug("Bokeh: injecting script tag for BokehJS library: ", url);
+      document.head.appendChild(element);
+    }
+  };
+
+  function inject_raw_css(css) {
+    const element = document.createElement("style");
+    element.appendChild(document.createTextNode(css));
+    document.body.appendChild(element);
+  }
+
+  const js_urls = ["https://cdn.bokeh.org/bokeh/release/bokeh-3.5.2.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-gl-3.5.2.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-widgets-3.5.2.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-tables-3.5.2.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-mathjax-3.5.2.min.js"];
+  const css_urls = [];
+
+  const inline_js = [    function(Bokeh) {
+      Bokeh.set_log_level("info");
+    },
+function(Bokeh) {
+    }
+  ];
+
+  function run_inline_js() {
+    if (root.Bokeh !== undefined || force === true) {
+      try {
+            for (let i = 0; i < inline_js.length; i++) {
+      inline_js[i].call(root, root.Bokeh);
+    }
+
+      } catch (error) {throw error;
+      }} else if (Date.now() < root._bokeh_timeout) {
+      setTimeout(run_inline_js, 100);
+    } else if (!root._bokeh_failed_load) {
+      console.log("Bokeh: BokehJS failed to load within specified timeout.");
+      root._bokeh_failed_load = true;
+    } else if (force !== true) {
+      const cell = $(document.getElementById(null)).parents('.cell').data().cell;
+      cell.output_area.append_execute_result(NB_LOAD_WARNING)
+    }
+  }
+
+  if (root._bokeh_is_loading === 0) {
+    console.debug("Bokeh: BokehJS loaded, going straight to plotting");
+    run_inline_js();
+  } else {
+    load_libs(css_urls, js_urls, function() {
+      console.debug("Bokeh: BokehJS plotting callback run at", now());
+      run_inline_js();
+    });
+  }
+}(window));
+</script>
+</div>
+</div>
+<div class="output_area">
+<div class="output_html rendered_html output_subarea output_execute_result">
+<table class="malariagen-ag3">
+<thead>
+<tr>
+<th colspan="2" style="text-align: left">MalariaGEN Ag3 API client</th>
+</tr>
+<tr><td colspan="2" style="text-align: left">
+                        Please note that data are subject to terms of use,
+                        for more information see <a href="https://www.malariagen.net/data">
+                        the MalariaGEN website</a> or contact support@malariagen.net.
+                        See also the <a href="https://malariagen.github.io/malariagen-data-python/v13.5.0/Ag3.html">Ag3 API docs</a>.
+                    </td></tr>
+</thead>
+<tbody>
+<tr>
+<th style="text-align: left">
+                            Storage URL
+                        </th>
+<td>gs://vo_agam_release_master_us_central1</td>
+</tr>
+<tr>
+<th style="text-align: left">
+                            Data releases available
+                        </th>
+<td>3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 3.10, 3.11, 3.12, 3.13</td>
+</tr>
+<tr>
+<th style="text-align: left">
+                            Results cache
+                        </th>
+<td>None</td>
+</tr>
+<tr>
+<th style="text-align: left">
+                            Cohorts analysis
+                        </th>
+<td>20240924</td>
+</tr>
+<tr>
+<th style="text-align: left">
+                            AIM analysis
+                        </th>
+<td>20220528</td>
+</tr>
+<tr>
+<th style="text-align: left">
+                            Site filters analysis
+                        </th>
+<td>dt_20200416</td>
+</tr>
+<tr>
+<th style="text-align: left">
+                            Software version
+                        </th>
+<td>malariagen_data 13.5.0</td>
+</tr>
+<tr>
+<th style="text-align: left">
+                            Client location
+                        </th>
+<td>Iowa, United States (Google Cloud us-central1)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=cd0e1516-610f-4a0c-8a35-83d7c651e5b7"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The samples originate from a previous project on <a href="https://www.malariagen.net/partner_study/1178-vo-ug-lawniczak/">Anopheles infectivity</a>.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered celltag_remove_input" id="cell-id=298c9187-eaba-42b3-9815-a5900d9a2db1">
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_html rendered_html output_subarea output_execute_result"><style type="text/css">
+</style>
+<table id="T_38cf4">
+<thead>
+<tr>
+<th class="col_heading level0 col0" id="T_38cf4_level0_col0">sample_set</th>
+<th class="col_heading level0 col1" id="T_38cf4_level0_col1">sample_count</th>
+<th class="col_heading level0 col2" id="T_38cf4_level0_col2">study_id</th>
+<th class="col_heading level0 col3" id="T_38cf4_level0_col3">release</th>
+<th class="col_heading level0 col4" id="T_38cf4_level0_col4">terms_of_use_expiry_date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="data row0 col0" id="T_38cf4_row0_col0">1178-VO-UG-LAWNICZAK-VMF00025</td>
+<td class="data row0 col1" id="T_38cf4_row0_col1">57</td>
+<td class="data row0 col2" id="T_38cf4_row0_col2"><a href="https://www.malariagen.net/partner_study/1178-VO-UG-LAWNICZAK">1178-VO-UG-LAWNICZAK</a></td>
+<td class="data row0 col3" id="T_38cf4_row0_col3">3.3</td>
+<td class="data row0 col4" id="T_38cf4_row0_col4">2023-10-26</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=6eacfb0d-b32b-4c68-8538-6543e575a94a"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The sample set includes Anopheles from Kenya and Uganda. Here is a summary of the samples by country, location, year and taxon</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered celltag_remove_input" id="cell-id=c229823d-002d-410b-9143-f174d0b7b60f">
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>                                     </pre>
+</div>
+</div>
+<div class="output_area">
+<div class="output_html rendered_html output_subarea output_execute_result"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th>taxon</th>
+<th>arabiensis</th>
+<th>gambiae</th>
+</tr>
+<tr>
+<th>sample_set</th>
+<th>country</th>
+<th>admin1_iso</th>
+<th>admin1_name</th>
+<th>year</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th rowspan="4" valign="top">1178-VO-UG-LAWNICZAK-VMF00025</th>
+<th>Kenya</th>
+<th>KE-08</th>
+<th>Homa Bay</th>
+<th>2017</th>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<th rowspan="3" valign="top">Uganda</th>
+<th rowspan="3" valign="top">UG-E</th>
+<th rowspan="3" valign="top">Eastern Region</th>
+<th>2013</th>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<th>2016</th>
+<td>2</td>
+<td>24</td>
+</tr>
+<tr>
+<th>2017</th>
+<td>1</td>
+<td>28</td>
+</tr>
+</tbody>
+</table>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=86a5429d-7e90-4b8b-ba5f-008af99f0adb"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For further information see the <a href="https://malariagen.github.io/vector-data/ag3/ag3.3.html">Ag3.3</a> docs.</p>
+</div>
+</div>
+</div>{% endraw %}
+
+
+<script type="application/vnd.jupyter.widget-state+json">
+{"state": {}, "version_major": 2, "version_minor": 0}
+</script>

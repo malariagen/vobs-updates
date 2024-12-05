@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Polo et al. 2024 - Genomic surveillance of Anopheles arabiensis across Kenya"
+title:  "Polo et al. 2024 preprint - Genomic surveillance of Anopheles arabiensis across Kenya"
 tags: research
 ---
 

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Mwinyi et al. 2024 - A new cryptic taxon on the coast of East Africa"
+title:  "Mwinyi et al. 2024 preprint - A new cryptic taxon on the coast of East Africa"
 tags: research
 ---
 

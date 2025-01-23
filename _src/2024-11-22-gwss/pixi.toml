@@ -1,0 +1,18 @@
+[project]
+authors = ["jonbrenas <51911846+jonbrenas@users.noreply.github.com>"]
+channels = ["conda-forge"]
+description = "Add a short description here"
+name = "2024-11-22-gwss"
+platforms = ["osx-arm64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+python = "3.11.*"
+
+[pypi-dependencies]
+jupyterlab = ">=4.3.2, <5"
+nbconvert = ">=7.16.4, <8"
+bokeh = ">=3.6.2, <4"
+malariagen-data = ">=14.0.0, <15"

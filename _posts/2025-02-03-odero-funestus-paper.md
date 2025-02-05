@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Odero et al. 2025 preprint - Distinct genetic populations and resistance in *An. funestus* in Tanzania"
+title:  "Odero et al. 2025 preprint - Distinct genetic populations and resistance in An. funestus in Tanzania"
 tags: research
 ---
 

@@ -25,4 +25,4 @@ This new version introduces some key changes:
 - An [error](https://github.com/malariagen/malariagen-data-python/issues/660) in the underlying data describing absence or presence of CNV alleles has been corrected for samples that were not called for CNVs. 
     - All samples in the Ag3 resource that are classified as `intermediate_gambcolu_arabiensis` on the `aim_species` field have been updated from presence `1` to absence `0`, as these intermediate samples are currently excluded from CNV calling.
     
-If you need to access the previous version of the discordant read calls, you can pin it by using `20240214` as the version in the `discordant_read_calls_analysis` parameter when calling the malariagen_data API, as described on the code snippet above. 
+If you need to access the previous version of the discordant read calls, you can pin it by using `20230911` as the version in the `discordant_read_calls_analysis` parameter when calling the malariagen_data API, as described on the code snippet above. 

@@ -10,7 +10,7 @@ Several locations present in the metadata for Ag3 have multiple sets of coordina
 
 The duplicated locations fell into two different categories:
 
-- Locations that have the same name but represent different places. In that case, both locations are renamed to mark that they are different. The new names are the old name followed `_A` or `_B`. For instance, 'Aboisso' became 'Aboisso_A' and 'Aboisso_B'. The following locations fell into this category:
+- Locations that have the same name but represent different places. In that case, both locations are renamed to mark that they are different. The new names are the old name followed `-A` or `-B`. For instance, 'Aboisso' became 'Aboisso-A' and 'Aboisso-B'. The following locations fell into this category:
 	- Aboisso
 	- Banda
 	- Bioko
